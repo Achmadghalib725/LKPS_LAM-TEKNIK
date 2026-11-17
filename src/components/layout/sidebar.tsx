@@ -48,8 +48,7 @@ export default function Sidebar() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const userRole = (session?.user as any)?.role
-  const isSuperAdmin = userRole === 'SUPER_ADMIN'
-  const isUPPSOrSuper = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_UPPS' || userRole === 'PENANGGUNG_JAWAB'
+  const isUPPS = userRole === 'ADMIN_UPPS' || userRole === 'SUPER_ADMIN' || userRole === 'PENANGGUNG_JAWAB'
   const isGuest = userRole === 'GUEST'
 
   const [customCriteriaList, setCustomCriteriaList] = useState<CustomCriteriaNav[]>([])
@@ -117,7 +116,7 @@ export default function Sidebar() {
             { href: '/export', label: 'Export Excel', icon: FileSpreadsheet, color: 'emerald', badge: null },
           ],
         },
-        ...(isUPPSOrSuper
+        ...(isUPPS
           ? [
               {
                 section: 'Pengaturan UPPS',

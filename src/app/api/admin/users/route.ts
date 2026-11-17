@@ -7,7 +7,7 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const role = session.user?.role;
   if (role !== "SUPER_ADMIN" && role !== "ADMIN_UPPS" && role !== "PENANGGUNG_JAWAB") {
-    return NextResponse.json({ error: "Hanya Admin UPPS / Super Admin yang dapat mengakses manajemen pengguna" }, { status: 403 });
+    return NextResponse.json({ error: "Hanya Admin UPPS yang dapat mengakses manajemen pengguna" }, { status: 403 });
   }
 
   const users = await prisma.user.findMany({
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const userRole = session.user?.role;
   if (userRole !== "SUPER_ADMIN" && userRole !== "ADMIN_UPPS" && userRole !== "PENANGGUNG_JAWAB") {
-    return NextResponse.json({ error: "Hanya Admin UPPS / Super Admin yang dapat mengelola akun pengguna" }, { status: 403 });
+    return NextResponse.json({ error: "Hanya Admin UPPS yang dapat mengelola akun pengguna" }, { status: 403 });
   }
 
   try {
@@ -102,7 +102,7 @@ export async function DELETE(req: Request) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const userRole = session.user?.role;
   if (userRole !== "SUPER_ADMIN" && userRole !== "ADMIN_UPPS" && userRole !== "PENANGGUNG_JAWAB") {
-    return NextResponse.json({ error: "Hanya Admin UPPS / Super Admin yang dapat menghapus akun pengguna" }, { status: 403 });
+    return NextResponse.json({ error: "Hanya Admin UPPS yang dapat menghapus akun pengguna" }, { status: 403 });
   }
 
   try {

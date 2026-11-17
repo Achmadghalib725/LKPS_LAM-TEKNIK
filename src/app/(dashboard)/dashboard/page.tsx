@@ -347,7 +347,7 @@ export default async function DashboardPage() {
             </IconBadge>
             <div>
               <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>
-                Mode Asesor Internal (Auditor Mutu) – Peninjauan & Simulasi Skor
+                Mode Reviewer Internal (Auditor Mutu) – Peninjauan & Simulasi Skor
               </div>
               <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                 Hak akses Anda bersifat Read-Only untuk meninjau kecukupan butir penilaian dan memeriksa hasil kalkulasi otomatis akreditasi.

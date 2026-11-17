@@ -1,27 +1,27 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import 'dotenv/config'
+import { prisma } from '../src/lib/prisma'
 
 async function main() {
   console.log('🌱 Seeding database LKPS LAM Teknik dengan data dummy lengkap (Kriteria 1 - 9)...')  // ── 1. Users ──
   const superAdmin = await prisma.user.upsert({
     where: { email: "superadmin@lkps.ac.id" },
-    update: {},
+    update: { role: "ADMIN_UPPS" },
     create: {
       id: "V54g5vHwrG1DRkk33gDS3kZ45uBifY2H",
-      name: "Super Admin",
+      name: "Admin UPPS Utama",
       email: "superadmin@lkps.ac.id",
-      role: "SUPER_ADMIN",
+      role: "ADMIN_UPPS",
     },
   })
 
   const adminUpps = await prisma.user.upsert({
     where: { email: "adminupps@lkps.ac.id" },
-    update: {},
+    update: { role: "ADMIN_UPPS" },
     create: {
       id: "JQIA9SSwpkwiMdZDLrbORqLJtNsbzHFi",
       name: "Admin UPPS Teknik",
       email: "adminupps@lkps.ac.id",
-      role: "PENANGGUNG_JAWAB",
+      role: "ADMIN_UPPS",
     },
   })
 
@@ -38,10 +38,10 @@ async function main() {
 
   const asesor = await prisma.user.upsert({
     where: { email: "asesor@lkps.ac.id" },
-    update: {},
+    update: { name: "Reviewer Internal LAM Teknik" },
     create: {
       id: "spyH1qnCuJs6RYvrZ0fua2Hu5LQuwGmS",
-      name: "Asesor Internal LAM Teknik",
+      name: "Reviewer Internal LAM Teknik",
       email: "asesor@lkps.ac.id",
       role: "ASESOR",
     },
@@ -206,7 +206,7 @@ async function main() {
 
   // ── 5. Kriteria 3: SDM (Dosen & Tendik) ──
   await prisma.bimbinganTA.deleteMany({})
-  await (prisma as any).eWMP.deleteMany({})
+  await prisma.eWMP.deleteMany({})
   await prisma.luaranDosen.deleteMany({})
   await prisma.dosenTetap.deleteMany({})
 
@@ -231,7 +231,7 @@ async function main() {
         bimbinganPSLainTS2: 2,
       },
     })
-    await (prisma as any).eWMP.create({
+    await prisma.eWMP.create({
       data: {
         dosenId: d.id,
         sksPendidikanPSSendiri: 8,
@@ -373,10 +373,9 @@ async function main() {
 
   console.log('✅ SELURUH DATA DUMMY KRITERIA 1 - 9 BERHASIL DI-SEED KE DATABASE!')
   console.log('\n📋 Akun Login Demo:')
-  console.log('  Super Admin  : superadmin@lkps.ac.id | password123')
   console.log('  Admin UPPS   : adminupps@lkps.ac.id  | password123')
   console.log('  Operator     : operator@lkps.ac.id   | password123')
-  console.log('  Asesor       : asesor@lkps.ac.id     | password123')
+  console.log('  Reviewer     : asesor@lkps.ac.id     | password123')
 }
 
 main()

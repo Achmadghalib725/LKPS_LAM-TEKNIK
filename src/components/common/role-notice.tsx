@@ -8,10 +8,10 @@ export function useModulePermission(moduleName: LkpsModule) {
   const { data: session, status } = useSession()
   const role = session?.user?.role as UserRole | undefined
   const canEdit = canEditModule(role, moduleName)
-  const isAsesor = role === 'ASESOR'
+  const isAsesor = role === 'ASESOR' || (role as string) === 'REVIEWER'
   const isOperator = role === 'OPERATOR_PRODI'
-  const isUpps = role === 'ADMIN_UPPS'
-  const isSuperAdmin = role === 'SUPER_ADMIN'
+  const isUpps = role === 'ADMIN_UPPS' || (role as string) === 'SUPER_ADMIN' || (role as string) === 'PENANGGUNG_JAWAB'
+  const isSuperAdmin = isUpps
 
   return {
     role,
@@ -56,7 +56,7 @@ export default function RoleNotice({ module: moduleName, customMessage }: RoleNo
         {customMessage ? (
           customMessage
         ) : isAsesor ? (
-          'Anda masuk sebagai Asesor Internal. Seluruh formulir terkunci dan tombol ubah/simpan dinonaktifkan demi menjaga integritas data audit.'
+          'Anda masuk sebagai Reviewer Internal. Seluruh formulir terkunci dan tombol ubah/simpan dinonaktifkan demi menjaga integritas data audit.'
         ) : isOperator ? (
           'Anda masuk sebagai Operator Prodi. Data modul ini merupakan kewenangan institusi/fakultas yang dikelola oleh Admin UPPS.'
         ) : isUpps ? (

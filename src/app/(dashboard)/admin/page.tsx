@@ -168,11 +168,21 @@ export default function AdminUsersPage() {
     }
   }
 
-  const filteredUsers = filterRole === 'ALL' ? users : users.filter((u) => u.role === filterRole)
+  const filteredUsers = filterRole === 'ALL'
+    ? users
+    : users.filter((u) => {
+        if (filterRole === 'ADMIN_UPPS') {
+          return u.role === 'ADMIN_UPPS' || (u.role as string) === 'SUPER_ADMIN' || (u.role as string) === 'PENANGGUNG_JAWAB'
+        }
+        if (filterRole === 'ASESOR') {
+          return u.role === 'ASESOR' || (u.role as string) === 'REVIEWER'
+        }
+        return u.role === filterRole
+      })
 
   return (
     <>
-      <Header title="Manajemen Pengguna & Hak Akses" subtitle="Super Admin Panel" />
+      <Header title="Manajemen Pengguna & Hak Akses" subtitle="Admin UPPS Panel" />
 
       <div className="page-content">
         <RoleNotice module="admin" />
@@ -209,7 +219,6 @@ export default function AdminUsersPage() {
             {(Object.keys(ROLE_DESCRIPTIONS) as UserRole[]).map((r) => {
               const info = ROLE_DESCRIPTIONS[r]
               const colors: Record<UserRole, { badge: string; border: string }> = {
-                SUPER_ADMIN: { badge: 'role-badge-super_admin', border: '#e9d5ff' },
                 ADMIN_UPPS: { badge: 'role-badge-admin_upps', border: '#bfdbfe' },
                 OPERATOR_PRODI: { badge: 'role-badge-operator_prodi', border: '#bbf7d0' },
                 ASESOR: { badge: 'role-badge-asesor', border: '#fed7aa' },
@@ -272,9 +281,8 @@ export default function AdminUsersPage() {
                 <option value="ALL">Semua Peran ({users.length})</option>
                 <option value="ADMIN_UPPS">Admin UPPS</option>
                 <option value="OPERATOR_PRODI">Operator Prodi</option>
-                <option value="ASESOR">Asesor Internal</option>
+                <option value="ASESOR">Reviewer</option>
                 <option value="GUEST">Guest (SSO)</option>
-                <option value="SUPER_ADMIN">Super Admin</option>
               </select>
 
               {canEdit && (
@@ -320,12 +328,10 @@ export default function AdminUsersPage() {
                       </td>
                       <td>{u.email}</td>
                       <td>
-                        <span className={`role-badge-${String(u.role).toLowerCase()}`}>
-                          {u.role === 'SUPER_ADMIN' && 'Super Admin'}
-                          {u.role === 'ADMIN_UPPS' && 'Admin UPPS'}
-                          {String(u.role) === 'PENANGGUNG_JAWAB' && 'Admin UPPS'}
+                        <span className={`role-badge-${String(u.role).toLowerCase() === 'super_admin' ? 'admin_upps' : String(u.role).toLowerCase()}`}>
+                          {(u.role === 'ADMIN_UPPS' || (u.role as string) === 'SUPER_ADMIN' || (u.role as string) === 'PENANGGUNG_JAWAB') && 'Admin UPPS'}
                           {u.role === 'OPERATOR_PRODI' && 'Operator Prodi'}
-                          {u.role === 'ASESOR' && 'Asesor Internal'}
+                          {(u.role === 'ASESOR' || (u.role as string) === 'REVIEWER') && 'Reviewer'}
                           {u.role === 'GUEST' && 'Guest (SSO)'}
                         </span>
                       </td>
@@ -452,9 +458,8 @@ export default function AdminUsersPage() {
                     >
                       <option value="ADMIN_UPPS">Admin UPPS (Fakultas / Otoritas Penuh)</option>
                       <option value="OPERATOR_PRODI">Operator Prodi (Pengisian Borang)</option>
-                      <option value="ASESOR">Asesor Internal (Read-Only)</option>
+                      <option value="ASESOR">Reviewer (Read-Only)</option>
                       <option value="GUEST">Guest (SSO Kampus - Ringkasan Fakultas)</option>
-                      <option value="SUPER_ADMIN">Super Admin (Institusi)</option>
                     </select>
                   </div>
 

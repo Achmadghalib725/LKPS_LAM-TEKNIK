@@ -1,4 +1,4 @@
-export type UserRole = 'ADMIN_UPPS' | 'OPERATOR_PRODI' | 'ASESOR' | 'GUEST' | 'SUPER_ADMIN'
+export type UserRole = 'ADMIN_UPPS' | 'OPERATOR_PRODI' | 'ASESOR' | 'GUEST'
 
 export type LkpsModule =
   | 'identitas'
@@ -17,25 +17,25 @@ export type LkpsModule =
 
 /**
  * Aturan hak akses tulis/ubah data (Mutation: POST, PUT, DELETE) per modul:
- * - ADMIN_UPPS & SUPER_ADMIN: Otoritas penuh terhadap seluruh sistem (seluruh Kriteria 1-9, Identitas, Export, Konfigurasi, dan Manajemen Pengguna).
+ * - ADMIN_UPPS: Otoritas penuh terhadap seluruh sistem (seluruh Kriteria 1-9, Identitas, Export, Konfigurasi, dan Manajemen Pengguna).
  * - OPERATOR_PRODI: Dapat mengisi & mengedit seluruh modul borang akreditasi (Kriteria 1-9, Identitas, Ingestion, Export, Konfigurasi), KECUALI manajemen pengguna (/admin).
- * - ASESOR: Read-Only murni di seluruh modul (Audit & Simulasi, melihat dashboard ringkasan data).
+ * - ASESOR / REVIEWER: Read-Only murni di seluruh modul (Audit & Simulasi, melihat dashboard ringkasan data).
  * - GUEST (SSO Kampus): Read-Only ringkasan data akreditasi prodi di tingkat fakultas saja.
  */
 export const MODULE_PERMISSIONS: Record<LkpsModule, UserRole[]> = {
-  admin: ['SUPER_ADMIN', 'ADMIN_UPPS'],
-  identitas: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  kerjasama: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  mahasiswa: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  sdm: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  keuangan: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  pendidikan: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  penelitian: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  pkm: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  luaran: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  penjaminan: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
-  export: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI', 'ASESOR'],
-  konfigurasi: ['SUPER_ADMIN', 'ADMIN_UPPS', 'OPERATOR_PRODI'],
+  admin: ['ADMIN_UPPS'],
+  identitas: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  kerjasama: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  mahasiswa: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  sdm: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  keuangan: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  pendidikan: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  penelitian: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  pkm: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  luaran: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  penjaminan: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  export: ['ADMIN_UPPS', 'OPERATOR_PRODI', 'ASESOR'],
+  konfigurasi: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
 }
 
 /**
@@ -43,36 +43,30 @@ export const MODULE_PERMISSIONS: Record<LkpsModule, UserRole[]> = {
  */
 export function canEditModule(role: UserRole | string | undefined | null, moduleName: LkpsModule): boolean {
   if (!role) return false
+  const normalizedRole = (role === 'SUPER_ADMIN' || role === 'PENANGGUNG_JAWAB')
+    ? 'ADMIN_UPPS'
+    : role === 'REVIEWER'
+    ? 'ASESOR'
+    : role
   const allowedRoles = MODULE_PERMISSIONS[moduleName]
-  return allowedRoles ? allowedRoles.includes(role as UserRole) : false
+  return allowedRoles ? allowedRoles.includes(normalizedRole as UserRole) : false
 }
 
 /**
  * Deskripsi tanggung jawab dan batasan per role
  */
 export const ROLE_DESCRIPTIONS: Record<UserRole, { title: string; deskripsi: string; wewenang: string[]; batasan: string[] }> = {
-  SUPER_ADMIN: {
-    title: 'Super Admin',
-    deskripsi: 'Memiliki kendali penuh terhadap seluruh sistem LKPS dan manajemen pengguna.',
-    wewenang: [
-      'Mengelola data institusi dan seluruh Program Studi',
-      'Mengelola akun pengguna (Admin UPPS, Operator Prodi, Asesor, Guest)',
-      'Mengisi dan merevisi data seluruh Kriteria Akreditasi (1 - 9)',
-      'Mengekspor laporan akhir akreditasi',
-    ],
-    batasan: ['Tidak ada batasan hak akses.'],
-  },
   ADMIN_UPPS: {
-    title: 'Admin UPPS (Fakultas / Unit Pengelola)',
-    deskripsi: 'Memiliki otoritas menyeluruh untuk mengelola seluruh data borang LKPS dan manajemen pengguna sistem.',
+    title: 'Admin UPPS (Fakultas / Otoritas Penuh)',
+    deskripsi: 'Memiliki kendali penuh terhadap seluruh sistem LKPS, seluruh kriteria borang, dan manajemen akun pengguna.',
     wewenang: [
-      'Mengelola seluruh Kriteria Akreditasi (Kriteria 1 s.d. 9)',
-      'Mengelola Formulir Identitas PT, UPPS, dan SK Pendirian',
-      'Mengelola data pengguna dan penugasan operator program studi (/admin)',
-      'Mengonfigurasi struktur kriteria dan tabel dinamis (/konfigurasi)',
-      'Melakukan ekspor laporan lengkap LKPS format LAM Teknik',
+      'Mengelola data institusi, UPPS, dan seluruh Program Studi',
+      'Mengelola akun pengguna dan penugasan operator program studi (/admin)',
+      'Mengonfigurasi struktur kriteria dan pembagian wewenang tabel (/konfigurasi)',
+      'Mengisi, merevisi, dan memvalidasi seluruh Kriteria Akreditasi (Kriteria 1 s.d. 9)',
+      'Melakukan ekspor laporan lengkap LKPS format baku LAM Teknik',
     ],
-    batasan: ['Tidak ada batasan hak akses pada modul borang akreditasi.'],
+    batasan: ['Tidak ada batasan hak akses (Administrator Tertinggi).'],
   },
   OPERATOR_PRODI: {
     title: 'Operator Program Studi',
@@ -88,7 +82,7 @@ export const ROLE_DESCRIPTIONS: Record<UserRole, { title: string; deskripsi: str
     ],
   },
   ASESOR: {
-    title: 'Asesor Internal / Auditor Mutu',
+    title: 'Reviewer (Auditor Mutu Internal)',
     deskripsi: 'Bertugas melakukan peninjauan audit mutu dan verifikasi instrumen LKPS sebelum diajukan ke LAM Teknik.',
     wewenang: [
       'Melihat dashboard ringkasan data dan penjelasan singkat capaian akreditasi',
@@ -122,11 +116,11 @@ export function getRoleErrorMessage(role: UserRole | string | undefined | null, 
   if (role === 'GUEST') {
     return 'Akses ditolak: Akun Guest hanya memiliki akses melihat ringkasan akreditasi fakultas.'
   }
-  if (role === 'ASESOR') {
-    return 'Akses ditolak: Asesor Internal hanya memiliki izin membaca data (Read-Only).'
+  if (role === 'ASESOR' || role === 'REVIEWER') {
+    return 'Akses ditolak: Reviewer Internal hanya memiliki izin membaca data (Read-Only).'
   }
   if (role === 'OPERATOR_PRODI' && moduleName === 'admin') {
-    return 'Akses ditolak: Modul manajemen pengguna hanya dapat diakses oleh Admin UPPS / Super Admin.'
+    return 'Akses ditolak: Modul manajemen pengguna hanya dapat diakses oleh Admin UPPS.'
   }
   return 'Akses ditolak: Anda tidak memiliki wewenang untuk mengubah data pada modul ini.'
 }
