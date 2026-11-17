@@ -2,17 +2,13 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { canEditModule, getRoleErrorMessage } from '@/lib/permissions'
+import { getActiveProdiId } from '@/lib/active-prodi'
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await auth()
-    const role = session?.user?.role
-    const userProdiId = session?.user?.prodiId
-
-    const whereClause: any = {}
-    if (role === 'OPERATOR_PRODI' && userProdiId) {
-      whereClause.prodiId = userProdiId
-    }
+    const activeProdiId = await getActiveProdiId(session, req)
+    const whereClause: any = activeProdiId ? { prodiId: activeProdiId } : {}
 
     const dana = await prisma.penggunaanDana.findMany({
       where: whereClause,

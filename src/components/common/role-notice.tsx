@@ -60,7 +60,7 @@ export default function RoleNotice({ module: moduleName, customMessage }: RoleNo
         ) : isOperator ? (
           'Anda masuk sebagai Operator Prodi. Data modul ini merupakan kewenangan institusi/fakultas yang dikelola oleh Admin UPPS.'
         ) : isUpps ? (
-          'Anda masuk sebagai Admin UPPS. Data operasional mikro ini diisi dan dikelola langsung oleh Operator Program Studi.'
+          'Anda masuk sebagai Admin UPPS (Mode Pemantau). Seluruh pengisian dan pembaruan data kriteria merupakan hak eksklusif Operator Program Studi.'
         ) : (
           'Akun Anda tidak memiliki hak akses tulis pada modul ini.'
         )}

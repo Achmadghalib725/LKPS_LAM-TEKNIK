@@ -135,11 +135,10 @@ function LoginForm() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {[
-              { role: 'Super Admin', email: 'superadmin@lkps.ac.id' },
               { role: 'Admin UPPS', email: 'adminupps@lkps.ac.id' },
               { role: 'Op. S1 Arsitektur', email: 'operator.arsitektur@lkps.ac.id' },
               { role: 'Op. S1 Informatika', email: 'operator.informatika@lkps.ac.id' },
-              { role: 'Asesor Internal', email: 'asesor@lkps.ac.id' },
+              { role: 'Reviewer Internal', email: 'asesor@lkps.ac.id' },
             ].map((u) => (
               <div key={u.email} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span className="text-xs text-muted">{u.role}</span>

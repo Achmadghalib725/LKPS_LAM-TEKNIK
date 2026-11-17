@@ -2,18 +2,15 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { canEditModule, getRoleErrorMessage } from '@/lib/permissions'
+import { getActiveProdiId } from '@/lib/active-prodi'
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await auth()
-    const role = session?.user?.role
-    const userProdiId = session?.user?.prodiId
+    const activeProdiId = await getActiveProdiId(session, req)
 
-    // Filter khusus: jika Operator Prodi, hanya ambil data dosen prodi miliknya
-    const dosenWhere: any = {}
-    if (role === 'OPERATOR_PRODI' && userProdiId) {
-      dosenWhere.prodiId = userProdiId
-    }
+    // Filter khusus berdasarkan prodi aktif
+    const dosenWhere = activeProdiId ? { prodiId: activeProdiId } : {}
 
     const dosen = await prisma.dosenTetap.findMany({
       where: dosenWhere,
@@ -26,23 +23,23 @@ export async function GET() {
     })
 
     const bimbingan = await prisma.bimbinganTA.findMany({
-      where: role === 'OPERATOR_PRODI' && userProdiId ? { dosen: { prodiId: userProdiId } } : {},
+      where: activeProdiId ? { dosen: { prodiId: activeProdiId } } : {},
       include: { dosen: true },
     })
 
     const ewmp = await prisma.eWMP.findMany({
-      where: role === 'OPERATOR_PRODI' && userProdiId ? { dosen: { prodiId: userProdiId } } : {},
+      where: activeProdiId ? { dosen: { prodiId: activeProdiId } } : {},
       include: { dosen: true },
     })
 
     const luaranDosen = await prisma.luaranDosen.findMany({
-      where: role === 'OPERATOR_PRODI' && userProdiId ? { prodiId: userProdiId } : {},
+      where: activeProdiId ? { prodiId: activeProdiId } : {},
       include: { dosen: true },
       orderBy: { tahun: 'desc' },
     })
 
     const tendik = await prisma.tenagaKependidikan.findMany({
-      where: role === 'OPERATOR_PRODI' && userProdiId ? { prodiId: userProdiId } : {},
+      where: activeProdiId ? { prodiId: activeProdiId } : {},
       orderBy: { jenis: 'asc' },
     })
 

@@ -83,8 +83,8 @@ export default function KonfigurasiKriteriaPage() {
   const { data: session, status } = useSession()
   const userRole = (session?.user as any)?.role
 
-  // Akses penuh untuk mengatur kriteria & tabel (Admin UPPS, Super Admin, dan Operator Prodi)
-  const canManage = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_UPPS' || userRole === 'PENANGGUNG_JAWAB' || userRole === 'OPERATOR_PRODI'
+  // Akses penuh untuk mengatur kriteria & tabel (Admin UPPS / Fakultas)
+  const canManage = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_UPPS' || userRole === 'PENANGGUNG_JAWAB'
 
   const [regulasiList, setRegulasiList] = useState<RegulasiItem[]>([])
   const [selectedRegulasiId, setSelectedRegulasiId] = useState<string>('')

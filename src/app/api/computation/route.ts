@@ -13,6 +13,7 @@ import {
   hitungTotalAkreditasi,
   IndikatorScore,
 } from '@/lib/computation-engine'
+import { getActiveProdiId } from '@/lib/active-prodi'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,18 +24,23 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const activeProdiId = await getActiveProdiId(session, req)
+    const prodiWhere: any = activeProdiId ? { prodiId: activeProdiId } : {}
+
     // 1. Ambil Data Kriteria 1 (Kerjasama)
-    const kerjasamaList = await prisma.kerjasama.findMany()
+    const kerjasamaList = await prisma.kerjasama.findMany({ where: prodiWhere })
     const n1 = kerjasamaList.filter((k) => k.jenisKerjasama === 'N1' || k.jenisKerjasama.toLowerCase().includes('pendidikan')).length
     const n2 = kerjasamaList.filter((k) => k.jenisKerjasama === 'N2' || k.jenisKerjasama.toLowerCase().includes('penelitian')).length
     const n3 = kerjasamaList.filter((k) => k.jenisKerjasama === 'N3' || k.jenisKerjasama.toLowerCase().includes('pkm') || k.jenisKerjasama.toLowerCase().includes('pengabdian')).length
 
     // 2. Ambil Data Kriteria 3 (SDM / DTPS)
-    const dosenTetapList = await prisma.dosenTetap.findMany()
+    const dosenTetapList = await prisma.dosenTetap.findMany({ where: prodiWhere })
     const ndtps = dosenTetapList.length || 1
     const dosenS3 = dosenTetapList.filter((d) => d.pendidikanS3).length
 
-    const ewmpList = await prisma.eWMP.findMany()
+    const ewmpList = await prisma.eWMP.findMany({
+      where: activeProdiId ? { dosen: { prodiId: activeProdiId } } : {},
+    })
     const rataEwmp =
       ewmpList.length > 0
         ? ewmpList.reduce(
@@ -49,7 +55,9 @@ export async function GET(req: NextRequest) {
           ) / ewmpList.length
         : 14.0
 
-    const bimbinganList = await prisma.bimbinganTA.findMany()
+    const bimbinganList = await prisma.bimbinganTA.findMany({
+      where: activeProdiId ? { dosen: { prodiId: activeProdiId } } : {},
+    })
     const rataBimbingan =
       bimbinganList.length > 0
         ? bimbinganList.reduce(
@@ -65,6 +73,7 @@ export async function GET(req: NextRequest) {
 
     // 3. Ambil Data Kriteria 2 (Mahasiswa)
     const mhsBaru = await prisma.seleksiMahasiswaBaru.findMany({
+      where: prodiWhere,
       orderBy: { createdAt: 'desc' },
       take: 1,
     })
@@ -75,6 +84,7 @@ export async function GET(req: NextRequest) {
 
     // 4. Ambil Data Kriteria 8 (Luaran)
     const ipkList = await prisma.ipkLulusan.findMany({
+      where: prodiWhere,
       orderBy: { createdAt: 'desc' },
       take: 3,
     })
@@ -84,32 +94,34 @@ export async function GET(req: NextRequest) {
         : 3.4
 
     const efektivitas = await prisma.efektivitasStudi.findMany({
+      where: prodiWhere,
       orderBy: { angkatan: 'desc' },
       take: 1,
     })
     const masaStudiTahun = efektivitas[0]?.jumlahLulusTepat ? 3.5 : 3.8
 
     const tracer = await prisma.tracerStudy.findMany({
+      where: prodiWhere,
       orderBy: { tahun: 'desc' },
       take: 1,
     })
     const waktuTungguBulan = tracer[0]?.rataWaktuTunggu || 4.2
 
     // 5. Ambil Data Kriteria 4 (Keuangan)
-    const danaList = await prisma.penggunaanDana.findMany()
+    const danaList = await prisma.penggunaanDana.findMany({ where: prodiWhere })
     const biayaOperasionalTahunan =
       danaList.length > 0
         ? danaList.reduce((acc, curr) => acc + curr.biayaOperasionalPendidikan, 0) / danaList.length
         : 9200000000 // default Rp 9.2 Miliar/tahun (~Rp 20 Jt/mhs)
 
     // 6. Ambil Data Kriteria 6 (Penelitian) & Kriteria 7 (PkM)
-    const penList = await prisma.penelitianDosen.findMany({ where: { jenis: 'Penelitian' } })
-    const pkmList = await prisma.penelitianDosen.findMany({ where: { jenis: 'PkM' } })
+    const penList = await prisma.penelitianDosen.findMany({ where: { ...prodiWhere, jenis: 'Penelitian' } })
+    const pkmList = await prisma.penelitianDosen.findMany({ where: { ...prodiWhere, jenis: 'PkM' } })
     const jumlahPenelitian3Tahun = penList.length > 0 ? penList.length : 24
     const jumlahPkm3Tahun = pkmList.length > 0 ? pkmList.length : 15
 
     // 7. Ambil Data Kriteria 9 (SPMI)
-    const spmiList = await prisma.dokumenSpmi.findMany()
+    const spmiList = await prisma.dokumenSpmi.findMany({ where: prodiWhere })
     const dokumenTersediaCount = spmiList.filter((s) => s.tersedia).length || 5
 
     // 8. Jalankan Engine Komputasi

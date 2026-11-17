@@ -71,8 +71,10 @@ export default function KriteriaDynamicPage({ params }: { params: Promise<{ id: 
 
   const { data: session } = useSession()
   const userRole = (session?.user as any)?.role
-  // Akses ubah struktur kriteria (Admin UPPS, Super Admin, dan Operator Prodi)
-  const canManageStructure = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_UPPS' || userRole === 'PENANGGUNG_JAWAB' || userRole === 'OPERATOR_PRODI'
+  // Akses ubah struktur kriteria (Admin UPPS / Fakultas)
+  const canManageStructure = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_UPPS' || userRole === 'PENANGGUNG_JAWAB'
+  // Akses isi & simpan baris data kriteria (Khusus Operator Prodi)
+  const canEditData = userRole === 'OPERATOR_PRODI'
 
   const [kriteria, setKriteria] = useState<KriteriaDetail | null>(null)
   const [loading, setLoading] = useState(true)
@@ -420,27 +422,29 @@ export default function KriteriaDynamicPage({ params }: { params: Promise<{ id: 
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() => handleSaveTable(tabel.id)}
-                        disabled={isSaving}
-                      >
-                        {isSaving ? (
-                          <>
-                            <Loader2 className="spin" size={14} /> Menyimpan...
-                          </>
-                        ) : isSaved ? (
-                          <>
-                            <CheckCircle2 size={14} style={{ color: '#fff' }} /> Tersimpan!
-                          </>
-                        ) : (
-                          <>
-                            <Save size={14} /> Simpan Data
-                          </>
-                        )}
-                      </button>
-                    </div>
+                    {canEditData && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleSaveTable(tabel.id)}
+                          disabled={isSaving}
+                        >
+                          {isSaving ? (
+                            <>
+                              <Loader2 className="spin" size={14} /> Menyimpan...
+                            </>
+                          ) : isSaved ? (
+                            <>
+                              <CheckCircle2 size={14} style={{ color: '#fff' }} /> Tersimpan!
+                            </>
+                          ) : (
+                            <>
+                              <Save size={14} /> Simpan Data
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Ketentuan Banner */}
@@ -493,13 +497,15 @@ export default function KriteriaDynamicPage({ params }: { params: Promise<{ id: 
                       <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
                         Isian Baris Data ({rows.length} Baris)
                       </div>
-                      <button
-                        className="btn btn-secondary btn-sm"
-                        style={{ fontSize: '12px', padding: '5px 10px' }}
-                        onClick={() => handleAddRow(tabel.id)}
-                      >
-                        <Plus size={13} /> Tambah Baris
-                      </button>
+                      {canEditData && (
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          style={{ fontSize: '12px', padding: '5px 10px' }}
+                          onClick={() => handleAddRow(tabel.id)}
+                        >
+                          <Plus size={13} /> Tambah Baris
+                        </button>
+                      )}
                     </div>
 
                     <div style={{ overflowX: 'auto' }}>

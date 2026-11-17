@@ -2,24 +2,26 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from '@/lib/auth-client'
-import { Bell, ChevronRight, Eye, ExternalLink, Check, CheckCheck, Clock } from 'lucide-react'
+import { Bell, ChevronRight, Eye, ExternalLink, Check, CheckCheck, Clock, Building } from 'lucide-react'
 import Link from 'next/link'
 
 const roleLabels: Record<string, string> = {
-  SUPER_ADMIN: 'Super Admin',
+  SUPER_ADMIN: 'Admin UPPS',
   ADMIN_UPPS: 'Admin UPPS',
   PENANGGUNG_JAWAB: 'Admin UPPS',
   OPERATOR_PRODI: 'Operator Prodi',
-  ASESOR: 'Asesor Internal',
+  ASESOR: 'Reviewer',
+  REVIEWER: 'Reviewer',
   GUEST: 'Guest (SSO)',
 }
 
 const roleBadgeClass: Record<string, string> = {
-  SUPER_ADMIN: 'role-badge-super_admin',
+  SUPER_ADMIN: 'role-badge-admin_upps',
   ADMIN_UPPS: 'role-badge-admin_upps',
   PENANGGUNG_JAWAB: 'role-badge-admin_upps',
   OPERATOR_PRODI: 'role-badge-operator_prodi',
   ASESOR: 'role-badge-asesor',
+  REVIEWER: 'role-badge-asesor',
   GUEST: 'badge badge-gray',
 }
 
@@ -48,6 +50,38 @@ export default function Header({ title, subtitle }: HeaderProps) {
   const [unreadCount, setUnreadCount] = useState(0)
   const [showNotif, setShowNotif] = useState(false)
   const notifRef = useRef<HTMLDivElement>(null)
+
+  // Switcher Prodi khusus Admin UPPS & Reviewer
+  const isMultiProdiViewer = role === 'ADMIN_UPPS' || role === 'SUPER_ADMIN' || role === 'PENANGGUNG_JAWAB' || role === 'ASESOR' || role === 'REVIEWER'
+  const [prodiList, setProdiList] = useState<{ id: string; namaProdi: string; jenjang: string }[]>([])
+  const [selectedProdiId, setSelectedProdiId] = useState<string>('')
+
+  useEffect(() => {
+    if (!isMultiProdiViewer) return
+    fetch('/api/prodi')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.prodiList?.length > 0) {
+          setProdiList(data.prodiList)
+          const match = document.cookie.match(new RegExp('(^| )selected_prodi_id=([^;]+)'))
+          const cookieVal = match ? match[2] : null
+          if (cookieVal && data.prodiList.some((p: any) => p.id === cookieVal)) {
+            setSelectedProdiId(cookieVal)
+          } else {
+            const firstId = data.prodiList[0].id
+            setSelectedProdiId(firstId)
+            document.cookie = `selected_prodi_id=${firstId}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
+          }
+        }
+      })
+      .catch(() => {})
+  }, [isMultiProdiViewer])
+
+  const handleSwitchProdi = (newProdiId: string) => {
+    setSelectedProdiId(newProdiId)
+    document.cookie = `selected_prodi_id=${newProdiId}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
+    window.location.reload()
+  }
 
   const fetchNotifs = async () => {
     try {
@@ -131,6 +165,26 @@ export default function Header({ title, subtitle }: HeaderProps) {
         </div>
 
         <div className="header-right">
+          {/* Switcher Prodi khusus Admin UPPS & Reviewer */}
+          {isMultiProdiViewer && prodiList.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-secondary)', padding: '3px 8px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+              <Building size={14} style={{ color: 'var(--accent-blue)', flexShrink: 0 }} />
+              <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>Prodi:</span>
+              <select
+                id="select-prodi-switcher"
+                className="form-select"
+                value={selectedProdiId}
+                onChange={(e) => handleSwitchProdi(e.target.value)}
+                style={{ padding: '2px 22px 2px 6px', fontSize: '11.5px', fontWeight: 700, borderColor: 'var(--border-color)', background: 'var(--bg-card)', borderRadius: '4px', cursor: 'pointer' }}
+                title="Pilih Program Studi yang sedang ditinjau"
+              >
+                {prodiList.map((p) => (
+                  <option key={p.id} value={p.id}>{p.namaProdi} ({p.jenjang})</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Switcher to LED */}
           <a
             href="http://localhost:3002"

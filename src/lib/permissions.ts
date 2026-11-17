@@ -17,25 +17,25 @@ export type LkpsModule =
 
 /**
  * Aturan hak akses tulis/ubah data (Mutation: POST, PUT, DELETE) per modul:
- * - ADMIN_UPPS: Otoritas penuh terhadap seluruh sistem (seluruh Kriteria 1-9, Identitas, Export, Konfigurasi, dan Manajemen Pengguna).
- * - OPERATOR_PRODI: Dapat mengisi & mengedit seluruh modul borang akreditasi (Kriteria 1-9, Identitas, Ingestion, Export, Konfigurasi), KECUALI manajemen pengguna (/admin).
+ * - OPERATOR_PRODI: Satu-satunya peran yang berhak mengisi, mengubah, dan memvalidasi seluruh data kriteria borang akreditasi (Kriteria 1 s.d. 9, termasuk Keuangan K4).
+ * - ADMIN_UPPS: Otoritas pengelolaan pengguna (/admin), master institusi & program studi, konfigurasi struktur kriteria (/konfigurasi), serta memantau (monitoring) dan ekspor laporan. Bersifat Read-Only pada modul pengisian kriteria.
  * - ASESOR / REVIEWER: Read-Only murni di seluruh modul (Audit & Simulasi, melihat dashboard ringkasan data).
  * - GUEST (SSO Kampus): Read-Only ringkasan data akreditasi prodi di tingkat fakultas saja.
  */
 export const MODULE_PERMISSIONS: Record<LkpsModule, UserRole[]> = {
   admin: ['ADMIN_UPPS'],
   identitas: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  kerjasama: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  mahasiswa: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  sdm: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  keuangan: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  pendidikan: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  penelitian: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  pkm: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  luaran: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
-  penjaminan: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  kerjasama: ['OPERATOR_PRODI'],
+  mahasiswa: ['OPERATOR_PRODI'],
+  sdm: ['OPERATOR_PRODI'],
+  keuangan: ['OPERATOR_PRODI'],
+  pendidikan: ['OPERATOR_PRODI'],
+  penelitian: ['OPERATOR_PRODI'],
+  pkm: ['OPERATOR_PRODI'],
+  luaran: ['OPERATOR_PRODI'],
+  penjaminan: ['OPERATOR_PRODI'],
   export: ['ADMIN_UPPS', 'OPERATOR_PRODI', 'ASESOR'],
-  konfigurasi: ['ADMIN_UPPS', 'OPERATOR_PRODI'],
+  konfigurasi: ['ADMIN_UPPS'],
 }
 
 /**
@@ -57,28 +57,30 @@ export function canEditModule(role: UserRole | string | undefined | null, module
  */
 export const ROLE_DESCRIPTIONS: Record<UserRole, { title: string; deskripsi: string; wewenang: string[]; batasan: string[] }> = {
   ADMIN_UPPS: {
-    title: 'Admin UPPS (Fakultas / Otoritas Penuh)',
-    deskripsi: 'Memiliki kendali penuh terhadap seluruh sistem LKPS, seluruh kriteria borang, dan manajemen akun pengguna.',
+    title: 'Admin UPPS (Fakultas / Penanggung Jawab)',
+    deskripsi: 'Bertanggung jawab atas manajemen pengguna, master program studi, konfigurasi sistem, dan pemantauan (monitoring) borang seluruh prodi.',
     wewenang: [
-      'Mengelola data institusi, UPPS, dan seluruh Program Studi',
-      'Mengelola akun pengguna dan penugasan operator program studi (/admin)',
-      'Mengonfigurasi struktur kriteria dan pembagian wewenang tabel (/konfigurasi)',
-      'Mengisi, merevisi, dan memvalidasi seluruh Kriteria Akreditasi (Kriteria 1 s.d. 9)',
-      'Melakukan ekspor laporan lengkap LKPS format baku LAM Teknik',
-    ],
-    batasan: ['Tidak ada batasan hak akses (Administrator Tertinggi).'],
-  },
-  OPERATOR_PRODI: {
-    title: 'Operator Program Studi',
-    deskripsi: 'Bertanggung jawab penuh atas pengisian, pembaruan, dan validasi data seluruh borang LKPS.',
-    wewenang: [
-      'Mengisi dan mengedit data seluruh Kriteria Akreditasi (Kriteria 1 s.d. 9)',
-      'Mengelola data Identitas Program Studi dan Tim Penyusun',
-      'Melakukan import data dari One Data UNILA dan input manual',
-      'Mengekspor laporan borang LKPS format baku LAM Teknik',
+      'Mengelola data pengguna dan penugasan operator program studi (/admin)',
+      'Mengelola master data institusi dan seluruh Program Studi (/identitas)',
+      'Mengonfigurasi struktur kriteria dan tabel dinamis (/konfigurasi)',
+      'Memantau dan mereview progres data seluruh Kriteria Akreditasi (1 s.d. 9)',
+      'Mengekspor laporan lengkap LKPS format baku LAM Teknik (/export)',
     ],
     batasan: [
-      'Dilarang mengakses dan mengubah manajemen data pengguna sistem (/admin)',
+      'Bersifat Read-Only pada modul pengisian kriteria akreditasi (pengisian & edit data kriteria merupakan hak eksklusif Operator Program Studi).',
+    ],
+  },
+  OPERATOR_PRODI: {
+    title: 'Operator Program Studi (Pengisi Borang)',
+    deskripsi: 'Satu-satunya pihak yang berwenang mengisi, memperbarui, dan memvalidasi seluruh data kriteria borang akreditasi (Kriteria 1 s.d. 9).',
+    wewenang: [
+      'Mengisi dan mengedit data seluruh Kriteria Akreditasi (Kriteria 1 s.d. 9, termasuk Keuangan Kriteria 4)',
+      'Mengelola data Tim Penyusun LKPS prodi (/identitas)',
+      'Melakukan sinkronisasi data dari One Data UNILA',
+      'Mengekspor laporan borang LKPS program studi (/export)',
+    ],
+    batasan: [
+      'Dilarang mengakses dan mengubah manajemen data pengguna sistem (/admin) serta konfigurasi regulasi (/konfigurasi).',
     ],
   },
   ASESOR: {
@@ -119,8 +121,11 @@ export function getRoleErrorMessage(role: UserRole | string | undefined | null, 
   if (role === 'ASESOR' || role === 'REVIEWER') {
     return 'Akses ditolak: Reviewer Internal hanya memiliki izin membaca data (Read-Only).'
   }
-  if (role === 'OPERATOR_PRODI' && moduleName === 'admin') {
-    return 'Akses ditolak: Modul manajemen pengguna hanya dapat diakses oleh Admin UPPS.'
+  if ((role === 'ADMIN_UPPS' || role === 'SUPER_ADMIN' || role === 'PENANGGUNG_JAWAB') && moduleName !== 'admin' && moduleName !== 'konfigurasi' && moduleName !== 'identitas' && moduleName !== 'export') {
+    return 'Akses ditolak: Admin UPPS berstatus sebagai Pemantau (Read-Only). Seluruh pengisian dan pembaruan data kriteria merupakan kewenangan eksklusif Operator Program Studi.'
+  }
+  if (role === 'OPERATOR_PRODI' && (moduleName === 'admin' || moduleName === 'konfigurasi')) {
+    return 'Akses ditolak: Modul ini hanya dapat diakses dan dikelola oleh Admin UPPS.'
   }
   return 'Akses ditolak: Anda tidak memiliki wewenang untuk mengubah data pada modul ini.'
 }

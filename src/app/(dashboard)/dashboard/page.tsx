@@ -4,6 +4,7 @@ import IconBadge from '@/components/IconBadge'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
+import { getActiveProdiId } from '@/lib/active-prodi'
 import {
   Layers,
   CheckCircle2,
@@ -166,7 +167,9 @@ export default async function DashboardPage() {
   const role = user?.role
   const userProdiId = user?.prodiId
 
-  const filterWhere = role === 'OPERATOR_PRODI' && userProdiId ? { prodiId: userProdiId } : {}
+  const activeProdiId = await getActiveProdiId(session)
+  const filterWhere: any = activeProdiId ? { prodiId: activeProdiId } : {}
+  const activeProdi = activeProdiId ? await prisma.prodi.findUnique({ where: { id: activeProdiId } }) : null
 
   // 1. Hitung progres riil per kriteria dari basis data
   // Kriteria 1: Kerjasama
@@ -181,10 +184,10 @@ export default async function DashboardPage() {
   // Kriteria 3: SDM (DTPS, EWMP, Bimbingan TA, Luaran Dosen, Tendik)
   const countDtps = await prisma.dosenTetap.count({ where: filterWhere })
   const countEwmp = await prisma.eWMP.count({
-    where: role === 'OPERATOR_PRODI' && userProdiId ? { dosen: { prodiId: userProdiId } } : {},
+    where: activeProdiId ? { dosen: { prodiId: activeProdiId } } : {},
   })
   const countBimbingan = await prisma.bimbinganTA.count({
-    where: role === 'OPERATOR_PRODI' && userProdiId ? { dosen: { prodiId: userProdiId } } : {},
+    where: activeProdiId ? { dosen: { prodiId: activeProdiId } } : {},
   })
   const countLuaranDosen = await prisma.luaranDosen.count({ where: filterWhere })
   const countTendik = await prisma.tenagaKependidikan.count({ where: filterWhere })
@@ -377,8 +380,17 @@ export default async function DashboardPage() {
               </IconBadge>
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-              Pantau dan kelola pengisian data LKPS untuk akreditasi LAM Teknik {activeReg?.tahunAkademik ? `(${activeReg.tahunAkademik})` : ''}.
-              Semua data tersimpan secara otomatis.
+              {activeProdi ? (
+                <>
+                  Menampilkan data LKPS Program Studi:{' '}
+                  <strong style={{ color: 'var(--accent-blue)' }}>
+                    {activeProdi.namaProdi} ({activeProdi.jenjang})
+                  </strong>
+                  .
+                </>
+              ) : (
+                'Pantau dan kelola pengisian data LKPS untuk akreditasi LAM Teknik.'
+              )}
             </p>
           </div>
           <div style={{ textAlign: 'center', flexShrink: 0 }}>

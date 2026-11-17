@@ -87,13 +87,10 @@ interface TendikRow {
 export default function SdmPage() {
   const { data: session } = useSession()
   const role = session?.user?.role as UserRole | undefined
-  const isSuperAdmin = role === 'SUPER_ADMIN'
   const isOperator = role === 'OPERATOR_PRODI'
-  const isUpps = role === 'ADMIN_UPPS'
-  const isAsesor = role === 'ASESOR'
 
-  const canEditDosen = isSuperAdmin || isOperator || isUpps
-  const canEditTendik = isSuperAdmin || isUpps || isOperator
+  const canEditDosen = isOperator
+  const canEditTendik = isOperator
 
   const [activeTab, setActiveTab] = useState<'3a1' | '3a2' | '3a3' | '3b' | '3c'>('3a1')
   const [subTab3b, setSubTab3b] = useState<'semua' | '3b1' | '3b4' | '3b6' | '3b7' | '3b8'>('semua')
@@ -466,19 +463,7 @@ export default function SdmPage() {
           </p>
         </div>
 
-        {isAsesor && <RoleNotice module="sdm" />}
-        {isUpps && activeTab !== '3c' && (
-          <RoleNotice
-            module="sdm"
-            customMessage="Anda masuk sebagai Admin UPPS. Data Dosen Tetap (DTPS), Pembimbingan TA, EWMP, dan Luaran Dosen dikelola langsung oleh Operator Program Studi."
-          />
-        )}
-        {isOperator && activeTab === '3c' && (
-          <RoleNotice
-            module="sdm"
-            customMessage="Anda masuk sebagai Operator Prodi. Data Tenaga Kependidikan (Tabel 3.c) merupakan kewenangan tingkat institusi yang dikelola oleh Admin UPPS."
-          />
-        )}
+        <RoleNotice module="sdm" />
 
         {/* Real-time Indicator & Formula Card */}
         <div className="card" style={{ marginBottom: '20px', background: 'rgba(139,92,246,0.05)', borderColor: 'rgba(139,92,246,0.15)' }}>

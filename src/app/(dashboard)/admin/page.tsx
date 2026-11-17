@@ -469,7 +469,7 @@ export default function AdminUsersPage() {
                       className="form-select"
                       value={formProdiId}
                       onChange={(e) => setFormProdiId(e.target.value)}
-                      disabled={formRole === 'SUPER_ADMIN' || formRole === 'ADMIN_UPPS' || formRole === 'GUEST'}
+                      disabled={formRole === 'ADMIN_UPPS' || formRole === 'GUEST'}
                     >
                       <option value="">-- Tidak Ditentukan / Institusi --</option>
                       {prodiList.map((p) => (
@@ -490,10 +490,9 @@ export default function AdminUsersPage() {
                   color: 'var(--text-secondary)'
                 }}>
                   <strong style={{ color: 'var(--text-primary)' }}>Catatan Peran: </strong>
-                  {formRole === 'SUPER_ADMIN' && 'Memiliki akses kontrol penuh ke semua modul sistem dan akun.'}
-                  {formRole === 'ADMIN_UPPS' && 'Otoritas menyeluruh: Mengelola seluruh data borang LKPS (Kriteria 1-9) dan manajemen pengguna.'}
-                  {formRole === 'OPERATOR_PRODI' && 'Dapat mengisi & mengedit seluruh borang akreditasi (Kriteria 1-9), tidak dapat mengakses manajemen pengguna.'}
-                  {formRole === 'ASESOR' && 'Read-Only: Melihat data borang, dashboard ringkasan data, dan simulasi skor penilaian.'}
+                  {formRole === 'ADMIN_UPPS' && 'Otoritas administrator: Mengelola manajemen pengguna, master prodi/identitas, dan memantau (Read-Only) kriteria per prodi.'}
+                  {formRole === 'OPERATOR_PRODI' && 'Hak eksklusif pengisian: Mengisi & memperbarui seluruh data kriteria (Kriteria 1 s.d. 9) untuk program studi terkait.'}
+                  {formRole === 'ASESOR' && 'Read-Only (Reviewer Internal): Meninjau seluruh data kriteria per prodi dan melihat simulasi skor penilaian.'}
                   {formRole === 'GUEST' && 'Read-Only (SSO): Hanya melihat dashboard ringkasan data capaian akreditasi prodi di tingkat fakultas.'}
                 </div>
               </div>
