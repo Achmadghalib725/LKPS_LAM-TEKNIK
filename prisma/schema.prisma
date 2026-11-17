@@ -1,0 +1,507 @@
+// Prisma Schema - LKPS LAM Teknik
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Prisma 7: url diatur di prisma.config.ts (env DATABASE_URL)
+}
+
+// ─── AUTH (Better-Auth Unified SSO) ─────────────────────────
+
+enum Peran {
+  SUPER_ADMIN
+  ADMIN_UPPS
+  PENANGGUNG_JAWAB
+  ASESOR
+  OPERATOR_PRODI
+  GUEST
+}
+
+model User {
+  id              String    @id
+  name            String
+  email           String    @unique
+  emailVerified   Boolean   @default(false)
+  image           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  role            Peran     @default(OPERATOR_PRODI)
+  banned          Boolean?  @default(false)
+  banReason       String?
+  banExpires      DateTime?
+  wajibGantiSandi Boolean   @default(false)
+
+  // Relations
+  prodiId         String?
+  prodi           Prodi?    @relation(fields: [prodiId], references: [id])
+  sessions        Session[]
+  accounts        Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  impersonatedBy String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// ─── IDENTITAS ───────────────────────────────────────────────
+
+model IdentitasPT {
+  id                String   @id @default(cuid())
+  namaPT            String
+  namaUPPS          String
+  jenisProgram      String   // Akademik / Vokasi
+  namaProdi         String
+  alamat            String
+  noSkPendirianPT   String?
+  tanggalSkPT       DateTime?
+  noSkPembukaanPS   String?
+  tanggalSkPS       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("identitas_pt")
+}
+
+model Prodi {
+  id                    String   @id @default(cuid())
+  namaProdi             String
+  jenjang               String
+  peringkatAkreditasi   String?
+  jumlahMahasiswaAktif  Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  users      User[]
+  timPenyusun TimPenyusun[]
+  dosenTetap DosenTetap[]
+
+  @@map("prodi")
+}
+
+model TimPenyusun {
+  id           String  @id @default(cuid())
+  nama         String
+  nidn         String?
+  jabatan      String
+  fotoTtd      String? // path to uploaded signature image
+  prodiId      String?
+  prodi        Prodi?  @relation(fields: [prodiId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("tim_penyusun")
+}
+
+// ─── KRITERIA 1: KERJASAMA ────────────────────────────────────
+
+model Kerjasama {
+  id            String   @id @default(cuid())
+  namaLembaga   String
+  tingkat       String   // Internasional / Nasional / Wilayah
+  judulKegiatan String
+  manfaat       String
+  tanggalMulai  DateTime
+  tanggalAkhir  DateTime
+  jenisKerjasama String  // N1=Pendidikan, N2=Penelitian, N3=PkM
+  fileMou       String?  // path to PDF
+  prodiId       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("kerjasama")
+}
+
+// ─── KRITERIA 2: MAHASISWA ────────────────────────────────────
+
+model SeleksiMahasiswaBaru {
+  id                    String @id @default(cuid())
+  tahunSemester         String // contoh: "TS", "TS-1", "TS-2", "TS-3", "TS-4"
+  dayaTampung           Int    @default(0)
+  jumlahPendaftar       Int    @default(0)
+  jumlahLulusSeleksi    Int    @default(0)
+  mahasiswaBaruReguler  Int    @default(0)
+  mahasiswaBaruTransfer Int    @default(0)
+  mahasiswaAktifReguler Int    @default(0)
+  mahasiswaAktifTransfer Int   @default(0)
+  prodiId               String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("seleksi_mahasiswa_baru")
+}
+
+model MahasiswaAsing {
+  id            String @id @default(cuid())
+  tahunSemester String // "TS", "TS-1", "TS-2"
+  jumlahFullTime Int   @default(0)
+  jumlahPartTime Int   @default(0)
+  prodiId       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("mahasiswa_asing")
+}
+
+// ─── KRITERIA 3: SDM ──────────────────────────────────────────
+
+model DosenTetap {
+  id                    String   @id @default(cuid())
+  nama                  String
+  nidn                  String   @unique
+  pendidikanS2          Boolean  @default(false)
+  pendidikanS3          Boolean  @default(false)
+  prodiPascaS2          String?  // Nama Prodi Pascasarjana Magister
+  prodiPascaS3          String?  // Nama Prodi Pascasarjana Doktor
+  bidangKeahlian        String?  // Bidang Keahlian
+  kesesuaianKompetensi  Boolean  @default(true) // Kesesuaian dengan Kompetensi Inti PS
+  jabatanAkademik       String   // Asisten Ahli / Lektor / Lektor Kepala / Guru Besar
+  sertifikasiDosen      Boolean  @default(true)
+  noSertifikatPendidik  String?  // Nomor Sertifikat Pendidik Profesional
+  sertifikasiKompetensi Boolean  @default(false)
+  bidangSertifikasi     String?  // Bidang Sertifikasi Kompetensi/Profesi/Industri
+  lembagaSertifikasi    String?  // Lembaga Penerbit Sertifikat
+  mataKuliahDiampu      String?  // Mata Kuliah pada PS yang Diakreditasi
+  kesesuaianBidang      Boolean  @default(true) // Kesesuaian Bidang Keahlian dg MK
+  mataKuliahPSLain      String?  // Mata Kuliah yang Diampu pada PS Lain
+  bebanMengajar         Float    @default(0)
+  prodiId               String?
+  prodi                 Prodi?   @relation(fields: [prodiId], references: [id])
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  bimbinganTA BimbinganTA[]
+  ewmp        EWMP[]
+  luaranDosen LuaranDosen[]
+
+  @@map("dosen_tetap")
+}
+
+model BimbinganTA {
+  id                    String @id @default(cuid())
+  dosenId               String
+  dosen                 DosenTetap @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+  bimbinganPSSendiriTS  Int    @default(0)
+  bimbinganPSSendiriTS1 Int    @default(0)
+  bimbinganPSSendiriTS2 Int    @default(0)
+  bimbinganPSLainTS     Int    @default(0)
+  bimbinganPSLainTS1    Int    @default(0)
+  bimbinganPSLainTS2    Int    @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("bimbingan_ta")
+}
+
+model EWMP {
+  id                     String @id @default(cuid())
+  dosenId                String
+  dosen                  DosenTetap @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+  sksPendidikanPSSendiri Float  @default(0)
+  sksPendidikanPSLain    Float  @default(0)
+  sksPenelitian          Float  @default(0)
+  sksPkm                 Float  @default(0)
+  sksTugasTambahan       Float  @default(0)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@map("ewmp")
+}
+
+model LuaranDosen {
+  id        String  @id @default(cuid())
+  dosenId   String?
+  dosen     DosenTetap? @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+  namaDosen String?
+  jenis     String   // publikasi / sitasi / hki / produk
+  judul     String
+  tahun     Int
+  detail    String?
+  prodiId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("luaran_dosen")
+}
+
+model TenagaKependidikan {
+  id                String @id @default(cuid())
+  jenis             String // Pustakawan / Laboran / Teknisi / Administrasi
+  jenjangPendidikan String // SMA / D3 / S1 / S2 / S3
+  jumlah            Int    @default(0)
+  prodiId           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("tenaga_kependidikan")
+}
+
+// ─── KRITERIA 4: KEUANGAN & SARANA ───────────────────────────
+
+model PenggunaanDana {
+  id                        String @id @default(cuid())
+  tahunSemester             String
+  biayaOperasionalPendidikan Float @default(0)
+  biayaPenelitianDosen       Float @default(0)
+  biayaPkmDosen              Float @default(0)
+  investasiSdm               Float @default(0)
+  investasiSarana            Float @default(0)
+  investasiPrasarana         Float @default(0)
+  prodiId                    String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  @@map("penggunaan_dana")
+}
+
+model Laboratorium {
+  id              String @id @default(cuid())
+  namaLab         String
+  jenisPeralatan  String
+  kepemilikan     String // Milik Sendiri / Sewa
+  kondisi         String // Baik / Rusak Ringan / Rusak Berat
+  jamPenggunaan   Float  @default(0)
+  luasRuangan     Float  @default(0)
+  prodiId         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("laboratorium")
+}
+
+// ─── KRITERIA 5: KURIKULUM ────────────────────────────────────
+
+model MataKuliah {
+  id              String @id @default(cuid())
+  kode            String
+  nama            String
+  sksTeori        Float  @default(0)
+  sksPraktikum    Float  @default(0)
+  cpl             String // CPL yang dipetakan (comma-separated)
+  linkRps         String?
+  fileRps         String?
+  unitPenyelenggara String?
+  prodiId         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("mata_kuliah")
+}
+
+model ProgramMBKM {
+  id              String @id @default(cuid())
+  namaMahasiswa   String
+  nim             String
+  namaMitra       String
+  sksKonversi     Float  @default(0)
+  dosenPembimbing String
+  tahun           Int
+  prodiId         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("program_mbkm")
+}
+
+// ─── KRITERIA 6 & 7: PENELITIAN & PKM ────────────────────────
+
+model PenelitianDosen {
+  id                  String @id @default(cuid())
+  judul               String
+  namaDosen           String
+  mahasiswaTerlibat   String // Nama mahasiswa (comma-separated)
+  tahun               Int
+  jenis               String // Penelitian / PkM
+  prodiId             String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("penelitian_dosen")
+}
+
+// ─── KRITERIA 8: LUARAN TRIDHARMA ────────────────────────────
+
+model IpkLulusan {
+  id            String @id @default(cuid())
+  tahunSemester String // "TS", "TS-1", "TS-2"
+  ipkMinimum    Float  @default(0)
+  ipkRataRata   Float  @default(0)
+  ipkMaksimum   Float  @default(0)
+  prodiId       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("ipk_lulusan")
+}
+
+model PrestasiMahasiswa {
+  id            String @id @default(cuid())
+  namaMahasiswa String
+  namaKegiatan  String
+  tingkat       String // Wilayah / Nasional / Internasional
+  penghargaan   String
+  tahun         Int
+  jenis         String // Akademik / Non-Akademik
+  prodiId       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("prestasi_mahasiswa")
+}
+
+model EfektivitasStudi {
+  id                   String @id @default(cuid())
+  angkatan             Int    // Tahun masuk
+  jumlahMasuk          Int    @default(0)
+  jumlahLulusTepat     Int    @default(0) // lulus ≤ 3.5 tahun
+  prodiId              String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("efektivitas_studi")
+}
+
+model TracerStudy {
+  id                      String @id @default(cuid())
+  tahun                   Int
+  jumlahResponden         Int    @default(0)
+  rataWaktuTunggu         Float  @default(0) // dalam bulan
+  persenSesuaiBidang      Float  @default(0) // persentase
+  persenTempatKerjaLokal  Float  @default(0)
+  persenTempatKerjaNasional Float @default(0)
+  persenTempatKerjaInternasional Float @default(0)
+  skorKepuasanPengguna    Float  @default(0) // skala 1-4
+  prodiId                 String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("tracer_study")
+}
+
+model LuaranMahasiswa {
+  id        String @id @default(cuid())
+  jenis     String // publikasi / sitasi / produk
+  judul     String
+  namaMahasiswa String
+  tahun     Int
+  detail    String?
+  prodiId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("luaran_mahasiswa")
+}
+
+// ─── KRITERIA 9: PENJAMINAN MUTU ─────────────────────────────
+
+model DokumenSpmi {
+  id           String @id @default(cuid())
+  jenisDokumen String // Kebijakan / Manual / Standar / Formulir / AMI / PPEPP
+  tersedia     Boolean @default(false)
+  fileDokumen  String?
+  keterangan   String?
+  prodiId      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("dokumen_spmi")
+}
+
+// ─── KONFIGURASI DINAMIS KRITERIA & TABEL LKPS ────────────────
+
+model RegulasiLKPS {
+  id            String   @id @default(cuid())
+  nama          String   // Contoh: "Instrumen LAM Teknik 2024 (Diploma III)"
+  tahunAkademik String   // Contoh: "2024/2025"
+  statusAktif   Boolean  @default(true)
+  keterangan    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  kriteriaList  KriteriaConfig[]
+
+  @@map("regulasi_lkps")
+}
+
+model KriteriaConfig {
+  id             String        @id @default(cuid())
+  regulasiId     String?
+  regulasi       RegulasiLKPS? @relation(fields: [regulasiId], references: [id], onDelete: Cascade)
+  nomorUrut      Int           @default(1)
+  kode           String        // Contoh: "K1", "K2", ...
+  nama           String        // Contoh: "Tata Pamong, Tata Kelola & Kerjasama"
+  deskripsi      String?
+  levelWewenang  String        @default("BERSAMA") // "UPPS" | "PRODI" | "BERSAMA"
+  statusAktif    Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  tabelList      TabelConfig[]
+
+  @@map("kriteria_config")
+}
+
+model TabelConfig {
+  id                String         @id @default(cuid())
+  kriteriaId        String
+  kriteria          KriteriaConfig @relation(fields: [kriteriaId], references: [id], onDelete: Cascade)
+  nomorTabel        String         // Contoh: "Tabel 1", "Tabel 2.a"
+  namaTabel         String         // Contoh: "Kerjasama Tridharma"
+  deskripsi         String?
+  levelPengisi      String         @default("PRODI") // "UPPS" | "PRODI" | "BERSAMA"
+  wajibUploadBukti  Boolean        @default(true)
+  formatKolom       String?        // Metadata kolom / JSON format
+  statusAktif       Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@map("tabel_config")
+}
+
