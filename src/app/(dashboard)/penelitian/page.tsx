@@ -191,8 +191,14 @@ export default function PenelitianPage() {
                       <td style={{ fontWeight: 600 }}>{row.judul}</td>
                       <td>{row.namaDosen}</td>
                       <td>
-                        {row.mahasiswaTerlibat ? (
-                          <span className="badge badge-purple">{row.mahasiswaTerlibat}</span>
+                        {row.mahasiswaTerlibat && row.mahasiswaTerlibat !== '-' ? (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                            {row.mahasiswaTerlibat.split(',').map((name, i) => (
+                              <span key={i} className="badge badge-purple" style={{ whiteSpace: 'normal', textAlign: 'left' }}>
+                                {name.trim()}
+                              </span>
+                            ))}
+                          </div>
                         ) : (
                           <span className="badge badge-gray">Tidak ada</span>
                         )}

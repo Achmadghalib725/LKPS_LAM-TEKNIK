@@ -31,10 +31,26 @@ export type IdentitasPTMinAggregateOutputType = {
   jenisProgram: string | null
   namaProdi: string | null
   alamat: string | null
+  kota: string | null
+  kodePos: string | null
+  telepon: string | null
+  email: string | null
+  website: string | null
   noSkPendirianPT: string | null
   tanggalSkPT: Date | null
+  pejabatSkPendirianPT: string | null
+  fileSkPendirianPT: string | null
   noSkPembukaanPS: string | null
   tanggalSkPS: Date | null
+  pejabatSkPembukaanPS: string | null
+  fileSkPembukaanPS: string | null
+  tahunPertama: string | null
+  peringkatAkreditasi: string | null
+  nomorSkAkreditasi: string | null
+  fileSkAkreditasi: string | null
+  namaPengusul: string | null
+  tanggalPengusul: Date | null
+  tahunTS: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,10 +62,26 @@ export type IdentitasPTMaxAggregateOutputType = {
   jenisProgram: string | null
   namaProdi: string | null
   alamat: string | null
+  kota: string | null
+  kodePos: string | null
+  telepon: string | null
+  email: string | null
+  website: string | null
   noSkPendirianPT: string | null
   tanggalSkPT: Date | null
+  pejabatSkPendirianPT: string | null
+  fileSkPendirianPT: string | null
   noSkPembukaanPS: string | null
   tanggalSkPS: Date | null
+  pejabatSkPembukaanPS: string | null
+  fileSkPembukaanPS: string | null
+  tahunPertama: string | null
+  peringkatAkreditasi: string | null
+  nomorSkAkreditasi: string | null
+  fileSkAkreditasi: string | null
+  namaPengusul: string | null
+  tanggalPengusul: Date | null
+  tahunTS: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -61,10 +93,26 @@ export type IdentitasPTCountAggregateOutputType = {
   jenisProgram: number
   namaProdi: number
   alamat: number
+  kota: number
+  kodePos: number
+  telepon: number
+  email: number
+  website: number
   noSkPendirianPT: number
   tanggalSkPT: number
+  pejabatSkPendirianPT: number
+  fileSkPendirianPT: number
   noSkPembukaanPS: number
   tanggalSkPS: number
+  pejabatSkPembukaanPS: number
+  fileSkPembukaanPS: number
+  tahunPertama: number
+  peringkatAkreditasi: number
+  nomorSkAkreditasi: number
+  fileSkAkreditasi: number
+  namaPengusul: number
+  tanggalPengusul: number
+  tahunTS: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -78,10 +126,26 @@ export type IdentitasPTMinAggregateInputType = {
   jenisProgram?: true
   namaProdi?: true
   alamat?: true
+  kota?: true
+  kodePos?: true
+  telepon?: true
+  email?: true
+  website?: true
   noSkPendirianPT?: true
   tanggalSkPT?: true
+  pejabatSkPendirianPT?: true
+  fileSkPendirianPT?: true
   noSkPembukaanPS?: true
   tanggalSkPS?: true
+  pejabatSkPembukaanPS?: true
+  fileSkPembukaanPS?: true
+  tahunPertama?: true
+  peringkatAkreditasi?: true
+  nomorSkAkreditasi?: true
+  fileSkAkreditasi?: true
+  namaPengusul?: true
+  tanggalPengusul?: true
+  tahunTS?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -93,10 +157,26 @@ export type IdentitasPTMaxAggregateInputType = {
   jenisProgram?: true
   namaProdi?: true
   alamat?: true
+  kota?: true
+  kodePos?: true
+  telepon?: true
+  email?: true
+  website?: true
   noSkPendirianPT?: true
   tanggalSkPT?: true
+  pejabatSkPendirianPT?: true
+  fileSkPendirianPT?: true
   noSkPembukaanPS?: true
   tanggalSkPS?: true
+  pejabatSkPembukaanPS?: true
+  fileSkPembukaanPS?: true
+  tahunPertama?: true
+  peringkatAkreditasi?: true
+  nomorSkAkreditasi?: true
+  fileSkAkreditasi?: true
+  namaPengusul?: true
+  tanggalPengusul?: true
+  tahunTS?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -108,10 +188,26 @@ export type IdentitasPTCountAggregateInputType = {
   jenisProgram?: true
   namaProdi?: true
   alamat?: true
+  kota?: true
+  kodePos?: true
+  telepon?: true
+  email?: true
+  website?: true
   noSkPendirianPT?: true
   tanggalSkPT?: true
+  pejabatSkPendirianPT?: true
+  fileSkPendirianPT?: true
   noSkPembukaanPS?: true
   tanggalSkPS?: true
+  pejabatSkPembukaanPS?: true
+  fileSkPembukaanPS?: true
+  tahunPertama?: true
+  peringkatAkreditasi?: true
+  nomorSkAkreditasi?: true
+  fileSkAkreditasi?: true
+  namaPengusul?: true
+  tanggalPengusul?: true
+  tahunTS?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -196,10 +292,26 @@ export type IdentitasPTGroupByOutputType = {
   jenisProgram: string
   namaProdi: string
   alamat: string
+  kota: string | null
+  kodePos: string | null
+  telepon: string | null
+  email: string | null
+  website: string | null
   noSkPendirianPT: string | null
   tanggalSkPT: Date | null
+  pejabatSkPendirianPT: string | null
+  fileSkPendirianPT: string | null
   noSkPembukaanPS: string | null
   tanggalSkPS: Date | null
+  pejabatSkPembukaanPS: string | null
+  fileSkPembukaanPS: string | null
+  tahunPertama: string | null
+  peringkatAkreditasi: string | null
+  nomorSkAkreditasi: string | null
+  fileSkAkreditasi: string | null
+  namaPengusul: string | null
+  tanggalPengusul: Date | null
+  tahunTS: string | null
   createdAt: Date
   updatedAt: Date
   _count: IdentitasPTCountAggregateOutputType | null
@@ -232,10 +344,26 @@ export type IdentitasPTWhereInput = {
   jenisProgram?: Prisma.StringFilter<"IdentitasPT"> | string
   namaProdi?: Prisma.StringFilter<"IdentitasPT"> | string
   alamat?: Prisma.StringFilter<"IdentitasPT"> | string
+  kota?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  kodePos?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  telepon?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  email?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  website?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   noSkPendirianPT?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   tanggalSkPT?: Prisma.DateTimeNullableFilter<"IdentitasPT"> | Date | string | null
+  pejabatSkPendirianPT?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  fileSkPendirianPT?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   noSkPembukaanPS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   tanggalSkPS?: Prisma.DateTimeNullableFilter<"IdentitasPT"> | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  fileSkPembukaanPS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  tahunPertama?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  peringkatAkreditasi?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  nomorSkAkreditasi?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  fileSkAkreditasi?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  namaPengusul?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  tanggalPengusul?: Prisma.DateTimeNullableFilter<"IdentitasPT"> | Date | string | null
+  tahunTS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   createdAt?: Prisma.DateTimeFilter<"IdentitasPT"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"IdentitasPT"> | Date | string
 }
@@ -247,10 +375,26 @@ export type IdentitasPTOrderByWithRelationInput = {
   jenisProgram?: Prisma.SortOrder
   namaProdi?: Prisma.SortOrder
   alamat?: Prisma.SortOrder
+  kota?: Prisma.SortOrderInput | Prisma.SortOrder
+  kodePos?: Prisma.SortOrderInput | Prisma.SortOrder
+  telepon?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  website?: Prisma.SortOrderInput | Prisma.SortOrder
   noSkPendirianPT?: Prisma.SortOrderInput | Prisma.SortOrder
   tanggalSkPT?: Prisma.SortOrderInput | Prisma.SortOrder
+  pejabatSkPendirianPT?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSkPendirianPT?: Prisma.SortOrderInput | Prisma.SortOrder
   noSkPembukaanPS?: Prisma.SortOrderInput | Prisma.SortOrder
   tanggalSkPS?: Prisma.SortOrderInput | Prisma.SortOrder
+  pejabatSkPembukaanPS?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSkPembukaanPS?: Prisma.SortOrderInput | Prisma.SortOrder
+  tahunPertama?: Prisma.SortOrderInput | Prisma.SortOrder
+  peringkatAkreditasi?: Prisma.SortOrderInput | Prisma.SortOrder
+  nomorSkAkreditasi?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSkAkreditasi?: Prisma.SortOrderInput | Prisma.SortOrder
+  namaPengusul?: Prisma.SortOrderInput | Prisma.SortOrder
+  tanggalPengusul?: Prisma.SortOrderInput | Prisma.SortOrder
+  tahunTS?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -265,10 +409,26 @@ export type IdentitasPTWhereUniqueInput = Prisma.AtLeast<{
   jenisProgram?: Prisma.StringFilter<"IdentitasPT"> | string
   namaProdi?: Prisma.StringFilter<"IdentitasPT"> | string
   alamat?: Prisma.StringFilter<"IdentitasPT"> | string
+  kota?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  kodePos?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  telepon?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  email?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  website?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   noSkPendirianPT?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   tanggalSkPT?: Prisma.DateTimeNullableFilter<"IdentitasPT"> | Date | string | null
+  pejabatSkPendirianPT?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  fileSkPendirianPT?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   noSkPembukaanPS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   tanggalSkPS?: Prisma.DateTimeNullableFilter<"IdentitasPT"> | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  fileSkPembukaanPS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  tahunPertama?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  peringkatAkreditasi?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  nomorSkAkreditasi?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  fileSkAkreditasi?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  namaPengusul?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
+  tanggalPengusul?: Prisma.DateTimeNullableFilter<"IdentitasPT"> | Date | string | null
+  tahunTS?: Prisma.StringNullableFilter<"IdentitasPT"> | string | null
   createdAt?: Prisma.DateTimeFilter<"IdentitasPT"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"IdentitasPT"> | Date | string
 }, "id">
@@ -280,10 +440,26 @@ export type IdentitasPTOrderByWithAggregationInput = {
   jenisProgram?: Prisma.SortOrder
   namaProdi?: Prisma.SortOrder
   alamat?: Prisma.SortOrder
+  kota?: Prisma.SortOrderInput | Prisma.SortOrder
+  kodePos?: Prisma.SortOrderInput | Prisma.SortOrder
+  telepon?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  website?: Prisma.SortOrderInput | Prisma.SortOrder
   noSkPendirianPT?: Prisma.SortOrderInput | Prisma.SortOrder
   tanggalSkPT?: Prisma.SortOrderInput | Prisma.SortOrder
+  pejabatSkPendirianPT?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSkPendirianPT?: Prisma.SortOrderInput | Prisma.SortOrder
   noSkPembukaanPS?: Prisma.SortOrderInput | Prisma.SortOrder
   tanggalSkPS?: Prisma.SortOrderInput | Prisma.SortOrder
+  pejabatSkPembukaanPS?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSkPembukaanPS?: Prisma.SortOrderInput | Prisma.SortOrder
+  tahunPertama?: Prisma.SortOrderInput | Prisma.SortOrder
+  peringkatAkreditasi?: Prisma.SortOrderInput | Prisma.SortOrder
+  nomorSkAkreditasi?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileSkAkreditasi?: Prisma.SortOrderInput | Prisma.SortOrder
+  namaPengusul?: Prisma.SortOrderInput | Prisma.SortOrder
+  tanggalPengusul?: Prisma.SortOrderInput | Prisma.SortOrder
+  tahunTS?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.IdentitasPTCountOrderByAggregateInput
@@ -301,10 +477,26 @@ export type IdentitasPTScalarWhereWithAggregatesInput = {
   jenisProgram?: Prisma.StringWithAggregatesFilter<"IdentitasPT"> | string
   namaProdi?: Prisma.StringWithAggregatesFilter<"IdentitasPT"> | string
   alamat?: Prisma.StringWithAggregatesFilter<"IdentitasPT"> | string
+  kota?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  kodePos?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  telepon?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  website?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
   noSkPendirianPT?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
   tanggalSkPT?: Prisma.DateTimeNullableWithAggregatesFilter<"IdentitasPT"> | Date | string | null
+  pejabatSkPendirianPT?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  fileSkPendirianPT?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
   noSkPembukaanPS?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
   tanggalSkPS?: Prisma.DateTimeNullableWithAggregatesFilter<"IdentitasPT"> | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  fileSkPembukaanPS?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  tahunPertama?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  peringkatAkreditasi?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  nomorSkAkreditasi?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  fileSkAkreditasi?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  namaPengusul?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
+  tanggalPengusul?: Prisma.DateTimeNullableWithAggregatesFilter<"IdentitasPT"> | Date | string | null
+  tahunTS?: Prisma.StringNullableWithAggregatesFilter<"IdentitasPT"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"IdentitasPT"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"IdentitasPT"> | Date | string
 }
@@ -316,10 +508,26 @@ export type IdentitasPTCreateInput = {
   jenisProgram: string
   namaProdi: string
   alamat: string
+  kota?: string | null
+  kodePos?: string | null
+  telepon?: string | null
+  email?: string | null
+  website?: string | null
   noSkPendirianPT?: string | null
   tanggalSkPT?: Date | string | null
+  pejabatSkPendirianPT?: string | null
+  fileSkPendirianPT?: string | null
   noSkPembukaanPS?: string | null
   tanggalSkPS?: Date | string | null
+  pejabatSkPembukaanPS?: string | null
+  fileSkPembukaanPS?: string | null
+  tahunPertama?: string | null
+  peringkatAkreditasi?: string | null
+  nomorSkAkreditasi?: string | null
+  fileSkAkreditasi?: string | null
+  namaPengusul?: string | null
+  tanggalPengusul?: Date | string | null
+  tahunTS?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -331,10 +539,26 @@ export type IdentitasPTUncheckedCreateInput = {
   jenisProgram: string
   namaProdi: string
   alamat: string
+  kota?: string | null
+  kodePos?: string | null
+  telepon?: string | null
+  email?: string | null
+  website?: string | null
   noSkPendirianPT?: string | null
   tanggalSkPT?: Date | string | null
+  pejabatSkPendirianPT?: string | null
+  fileSkPendirianPT?: string | null
   noSkPembukaanPS?: string | null
   tanggalSkPS?: Date | string | null
+  pejabatSkPembukaanPS?: string | null
+  fileSkPembukaanPS?: string | null
+  tahunPertama?: string | null
+  peringkatAkreditasi?: string | null
+  nomorSkAkreditasi?: string | null
+  fileSkAkreditasi?: string | null
+  namaPengusul?: string | null
+  tanggalPengusul?: Date | string | null
+  tahunTS?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -346,10 +570,26 @@ export type IdentitasPTUpdateInput = {
   jenisProgram?: Prisma.StringFieldUpdateOperationsInput | string
   namaProdi?: Prisma.StringFieldUpdateOperationsInput | string
   alamat?: Prisma.StringFieldUpdateOperationsInput | string
+  kota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kodePos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telepon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPT?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPS?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tahunPertama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  peringkatAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomorSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaPengusul?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalPengusul?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tahunTS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -361,10 +601,26 @@ export type IdentitasPTUncheckedUpdateInput = {
   jenisProgram?: Prisma.StringFieldUpdateOperationsInput | string
   namaProdi?: Prisma.StringFieldUpdateOperationsInput | string
   alamat?: Prisma.StringFieldUpdateOperationsInput | string
+  kota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kodePos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telepon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPT?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPS?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tahunPertama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  peringkatAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomorSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaPengusul?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalPengusul?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tahunTS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -376,10 +632,26 @@ export type IdentitasPTCreateManyInput = {
   jenisProgram: string
   namaProdi: string
   alamat: string
+  kota?: string | null
+  kodePos?: string | null
+  telepon?: string | null
+  email?: string | null
+  website?: string | null
   noSkPendirianPT?: string | null
   tanggalSkPT?: Date | string | null
+  pejabatSkPendirianPT?: string | null
+  fileSkPendirianPT?: string | null
   noSkPembukaanPS?: string | null
   tanggalSkPS?: Date | string | null
+  pejabatSkPembukaanPS?: string | null
+  fileSkPembukaanPS?: string | null
+  tahunPertama?: string | null
+  peringkatAkreditasi?: string | null
+  nomorSkAkreditasi?: string | null
+  fileSkAkreditasi?: string | null
+  namaPengusul?: string | null
+  tanggalPengusul?: Date | string | null
+  tahunTS?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -391,10 +663,26 @@ export type IdentitasPTUpdateManyMutationInput = {
   jenisProgram?: Prisma.StringFieldUpdateOperationsInput | string
   namaProdi?: Prisma.StringFieldUpdateOperationsInput | string
   alamat?: Prisma.StringFieldUpdateOperationsInput | string
+  kota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kodePos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telepon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPT?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPS?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tahunPertama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  peringkatAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomorSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaPengusul?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalPengusul?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tahunTS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -406,10 +694,26 @@ export type IdentitasPTUncheckedUpdateManyInput = {
   jenisProgram?: Prisma.StringFieldUpdateOperationsInput | string
   namaProdi?: Prisma.StringFieldUpdateOperationsInput | string
   alamat?: Prisma.StringFieldUpdateOperationsInput | string
+  kota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kodePos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telepon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPT?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPendirianPT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   noSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalSkPS?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pejabatSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkPembukaanPS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tahunPertama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  peringkatAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomorSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSkAkreditasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaPengusul?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalPengusul?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tahunTS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -421,10 +725,26 @@ export type IdentitasPTCountOrderByAggregateInput = {
   jenisProgram?: Prisma.SortOrder
   namaProdi?: Prisma.SortOrder
   alamat?: Prisma.SortOrder
+  kota?: Prisma.SortOrder
+  kodePos?: Prisma.SortOrder
+  telepon?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  website?: Prisma.SortOrder
   noSkPendirianPT?: Prisma.SortOrder
   tanggalSkPT?: Prisma.SortOrder
+  pejabatSkPendirianPT?: Prisma.SortOrder
+  fileSkPendirianPT?: Prisma.SortOrder
   noSkPembukaanPS?: Prisma.SortOrder
   tanggalSkPS?: Prisma.SortOrder
+  pejabatSkPembukaanPS?: Prisma.SortOrder
+  fileSkPembukaanPS?: Prisma.SortOrder
+  tahunPertama?: Prisma.SortOrder
+  peringkatAkreditasi?: Prisma.SortOrder
+  nomorSkAkreditasi?: Prisma.SortOrder
+  fileSkAkreditasi?: Prisma.SortOrder
+  namaPengusul?: Prisma.SortOrder
+  tanggalPengusul?: Prisma.SortOrder
+  tahunTS?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -436,10 +756,26 @@ export type IdentitasPTMaxOrderByAggregateInput = {
   jenisProgram?: Prisma.SortOrder
   namaProdi?: Prisma.SortOrder
   alamat?: Prisma.SortOrder
+  kota?: Prisma.SortOrder
+  kodePos?: Prisma.SortOrder
+  telepon?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  website?: Prisma.SortOrder
   noSkPendirianPT?: Prisma.SortOrder
   tanggalSkPT?: Prisma.SortOrder
+  pejabatSkPendirianPT?: Prisma.SortOrder
+  fileSkPendirianPT?: Prisma.SortOrder
   noSkPembukaanPS?: Prisma.SortOrder
   tanggalSkPS?: Prisma.SortOrder
+  pejabatSkPembukaanPS?: Prisma.SortOrder
+  fileSkPembukaanPS?: Prisma.SortOrder
+  tahunPertama?: Prisma.SortOrder
+  peringkatAkreditasi?: Prisma.SortOrder
+  nomorSkAkreditasi?: Prisma.SortOrder
+  fileSkAkreditasi?: Prisma.SortOrder
+  namaPengusul?: Prisma.SortOrder
+  tanggalPengusul?: Prisma.SortOrder
+  tahunTS?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -451,10 +787,26 @@ export type IdentitasPTMinOrderByAggregateInput = {
   jenisProgram?: Prisma.SortOrder
   namaProdi?: Prisma.SortOrder
   alamat?: Prisma.SortOrder
+  kota?: Prisma.SortOrder
+  kodePos?: Prisma.SortOrder
+  telepon?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  website?: Prisma.SortOrder
   noSkPendirianPT?: Prisma.SortOrder
   tanggalSkPT?: Prisma.SortOrder
+  pejabatSkPendirianPT?: Prisma.SortOrder
+  fileSkPendirianPT?: Prisma.SortOrder
   noSkPembukaanPS?: Prisma.SortOrder
   tanggalSkPS?: Prisma.SortOrder
+  pejabatSkPembukaanPS?: Prisma.SortOrder
+  fileSkPembukaanPS?: Prisma.SortOrder
+  tahunPertama?: Prisma.SortOrder
+  peringkatAkreditasi?: Prisma.SortOrder
+  nomorSkAkreditasi?: Prisma.SortOrder
+  fileSkAkreditasi?: Prisma.SortOrder
+  namaPengusul?: Prisma.SortOrder
+  tanggalPengusul?: Prisma.SortOrder
+  tahunTS?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -468,10 +820,26 @@ export type IdentitasPTSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   jenisProgram?: boolean
   namaProdi?: boolean
   alamat?: boolean
+  kota?: boolean
+  kodePos?: boolean
+  telepon?: boolean
+  email?: boolean
+  website?: boolean
   noSkPendirianPT?: boolean
   tanggalSkPT?: boolean
+  pejabatSkPendirianPT?: boolean
+  fileSkPendirianPT?: boolean
   noSkPembukaanPS?: boolean
   tanggalSkPS?: boolean
+  pejabatSkPembukaanPS?: boolean
+  fileSkPembukaanPS?: boolean
+  tahunPertama?: boolean
+  peringkatAkreditasi?: boolean
+  nomorSkAkreditasi?: boolean
+  fileSkAkreditasi?: boolean
+  namaPengusul?: boolean
+  tanggalPengusul?: boolean
+  tahunTS?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["identitasPT"]>
@@ -483,10 +851,26 @@ export type IdentitasPTSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   jenisProgram?: boolean
   namaProdi?: boolean
   alamat?: boolean
+  kota?: boolean
+  kodePos?: boolean
+  telepon?: boolean
+  email?: boolean
+  website?: boolean
   noSkPendirianPT?: boolean
   tanggalSkPT?: boolean
+  pejabatSkPendirianPT?: boolean
+  fileSkPendirianPT?: boolean
   noSkPembukaanPS?: boolean
   tanggalSkPS?: boolean
+  pejabatSkPembukaanPS?: boolean
+  fileSkPembukaanPS?: boolean
+  tahunPertama?: boolean
+  peringkatAkreditasi?: boolean
+  nomorSkAkreditasi?: boolean
+  fileSkAkreditasi?: boolean
+  namaPengusul?: boolean
+  tanggalPengusul?: boolean
+  tahunTS?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["identitasPT"]>
@@ -498,10 +882,26 @@ export type IdentitasPTSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   jenisProgram?: boolean
   namaProdi?: boolean
   alamat?: boolean
+  kota?: boolean
+  kodePos?: boolean
+  telepon?: boolean
+  email?: boolean
+  website?: boolean
   noSkPendirianPT?: boolean
   tanggalSkPT?: boolean
+  pejabatSkPendirianPT?: boolean
+  fileSkPendirianPT?: boolean
   noSkPembukaanPS?: boolean
   tanggalSkPS?: boolean
+  pejabatSkPembukaanPS?: boolean
+  fileSkPembukaanPS?: boolean
+  tahunPertama?: boolean
+  peringkatAkreditasi?: boolean
+  nomorSkAkreditasi?: boolean
+  fileSkAkreditasi?: boolean
+  namaPengusul?: boolean
+  tanggalPengusul?: boolean
+  tahunTS?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["identitasPT"]>
@@ -513,15 +913,31 @@ export type IdentitasPTSelectScalar = {
   jenisProgram?: boolean
   namaProdi?: boolean
   alamat?: boolean
+  kota?: boolean
+  kodePos?: boolean
+  telepon?: boolean
+  email?: boolean
+  website?: boolean
   noSkPendirianPT?: boolean
   tanggalSkPT?: boolean
+  pejabatSkPendirianPT?: boolean
+  fileSkPendirianPT?: boolean
   noSkPembukaanPS?: boolean
   tanggalSkPS?: boolean
+  pejabatSkPembukaanPS?: boolean
+  fileSkPembukaanPS?: boolean
+  tahunPertama?: boolean
+  peringkatAkreditasi?: boolean
+  nomorSkAkreditasi?: boolean
+  fileSkAkreditasi?: boolean
+  namaPengusul?: boolean
+  tanggalPengusul?: boolean
+  tahunTS?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type IdentitasPTOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "namaPT" | "namaUPPS" | "jenisProgram" | "namaProdi" | "alamat" | "noSkPendirianPT" | "tanggalSkPT" | "noSkPembukaanPS" | "tanggalSkPS" | "createdAt" | "updatedAt", ExtArgs["result"]["identitasPT"]>
+export type IdentitasPTOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "namaPT" | "namaUPPS" | "jenisProgram" | "namaProdi" | "alamat" | "kota" | "kodePos" | "telepon" | "email" | "website" | "noSkPendirianPT" | "tanggalSkPT" | "pejabatSkPendirianPT" | "fileSkPendirianPT" | "noSkPembukaanPS" | "tanggalSkPS" | "pejabatSkPembukaanPS" | "fileSkPembukaanPS" | "tahunPertama" | "peringkatAkreditasi" | "nomorSkAkreditasi" | "fileSkAkreditasi" | "namaPengusul" | "tanggalPengusul" | "tahunTS" | "createdAt" | "updatedAt", ExtArgs["result"]["identitasPT"]>
 
 export type $IdentitasPTPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "IdentitasPT"
@@ -533,10 +949,26 @@ export type $IdentitasPTPayload<ExtArgs extends runtime.Types.Extensions.Interna
     jenisProgram: string
     namaProdi: string
     alamat: string
+    kota: string | null
+    kodePos: string | null
+    telepon: string | null
+    email: string | null
+    website: string | null
     noSkPendirianPT: string | null
     tanggalSkPT: Date | null
+    pejabatSkPendirianPT: string | null
+    fileSkPendirianPT: string | null
     noSkPembukaanPS: string | null
     tanggalSkPS: Date | null
+    pejabatSkPembukaanPS: string | null
+    fileSkPembukaanPS: string | null
+    tahunPertama: string | null
+    peringkatAkreditasi: string | null
+    nomorSkAkreditasi: string | null
+    fileSkAkreditasi: string | null
+    namaPengusul: string | null
+    tanggalPengusul: Date | null
+    tahunTS: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["identitasPT"]>
@@ -968,10 +1400,26 @@ export interface IdentitasPTFieldRefs {
   readonly jenisProgram: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly namaProdi: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly alamat: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly kota: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly kodePos: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly telepon: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly email: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly website: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly noSkPendirianPT: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly tanggalSkPT: Prisma.FieldRef<"IdentitasPT", 'DateTime'>
+  readonly pejabatSkPendirianPT: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly fileSkPendirianPT: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly noSkPembukaanPS: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly tanggalSkPS: Prisma.FieldRef<"IdentitasPT", 'DateTime'>
+  readonly pejabatSkPembukaanPS: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly fileSkPembukaanPS: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly tahunPertama: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly peringkatAkreditasi: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly nomorSkAkreditasi: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly fileSkAkreditasi: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly namaPengusul: Prisma.FieldRef<"IdentitasPT", 'String'>
+  readonly tanggalPengusul: Prisma.FieldRef<"IdentitasPT", 'DateTime'>
+  readonly tahunTS: Prisma.FieldRef<"IdentitasPT", 'String'>
   readonly createdAt: Prisma.FieldRef<"IdentitasPT", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"IdentitasPT", 'DateTime'>
 }

@@ -10,13 +10,22 @@ import {
   Users,
   Plus,
   Trash2,
-  UploadCloud,
   Save,
   CheckCircle2,
   Loader2,
   Building,
   School,
   FileCheck,
+  FileText,
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  Award,
+  Calendar,
+  UserCheck,
+  Paperclip,
+  Info,
 } from 'lucide-react'
 
 interface IdentitasPT {
@@ -25,10 +34,26 @@ interface IdentitasPT {
   jenisProgram: string
   namaProdi: string
   alamat: string
+  kota: string
+  kodePos: string
+  telepon: string
+  email: string
+  website: string
   noSkPendirianPT: string
   tanggalSkPT: string
+  pejabatSkPendirianPT: string
+  fileSkPendirianPT: string
   noSkPembukaanPS: string
   tanggalSkPS: string
+  pejabatSkPembukaanPS: string
+  fileSkPembukaanPS: string
+  tahunPertama: string
+  peringkatAkreditasi: string
+  nomorSkAkreditasi: string
+  fileSkAkreditasi: string
+  namaPengusul: string
+  tanggalPengusul: string
+  tahunTS: string
 }
 
 interface ProdiRow {
@@ -54,19 +79,35 @@ export default function IdentitasPage() {
   const [loading, setLoading] = useState(true)
 
   const [identitas, setIdentitas] = useState<IdentitasPT>({
-    namaPT: '',
-    namaUPPS: '',
-    jenisProgram: 'Vokasi',
-    namaProdi: '',
-    alamat: '',
+    namaPT: 'Universitas Lampung',
+    namaUPPS: 'Fakultas Teknik',
+    jenisProgram: 'Sarjana',
+    namaProdi: 'Teknik Informatika',
+    alamat: 'Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Gedong Meneng',
+    kota: 'Kota Bandar Lampung',
+    kodePos: '35145',
+    telepon: '(0721) 704947',
+    email: 'dekan@eng.unila.ac.id',
+    website: 'https://eng.unila.ac.id',
     noSkPendirianPT: '',
     tanggalSkPT: '',
+    pejabatSkPendirianPT: '',
+    fileSkPendirianPT: '',
     noSkPembukaanPS: '',
     tanggalSkPS: '',
+    pejabatSkPembukaanPS: '',
+    fileSkPembukaanPS: '',
+    tahunPertama: '',
+    peringkatAkreditasi: 'Baik Sekali',
+    nomorSkAkreditasi: '',
+    fileSkAkreditasi: '',
+    namaPengusul: '',
+    tanggalPengusul: '',
+    tahunTS: '2024/2025',
   })
 
   const [prodiList, setProdiList] = useState<ProdiRow[]>([
-    { id: '1', namaProdi: '', jenjang: 'D3', peringkatAkreditasi: '', jumlahMahasiswaAktif: '0' },
+    { id: '1', namaProdi: '', jenjang: 'S1', peringkatAkreditasi: '', jumlahMahasiswaAktif: '0' },
   ])
 
   const [timList, setTimList] = useState<TimPenyusunRow[]>([
@@ -74,7 +115,7 @@ export default function IdentitasPage() {
   ])
 
   function addProdi() {
-    setProdiList(prev => [...prev, { id: Date.now().toString(), namaProdi: '', jenjang: 'D3', peringkatAkreditasi: '', jumlahMahasiswaAktif: '0' }])
+    setProdiList(prev => [...prev, { id: Date.now().toString(), namaProdi: '', jenjang: 'S1', peringkatAkreditasi: '', jumlahMahasiswaAktif: '0' }])
   }
 
   function removeProdi(id: string) {
@@ -108,22 +149,38 @@ export default function IdentitasPage() {
         const data = await res.json()
         if (data.identitas) {
           setIdentitas({
-            namaPT: data.identitas.namaPT || '',
-            namaUPPS: data.identitas.namaUPPS || '',
-            jenisProgram: data.identitas.jenisProgram || 'Vokasi',
-            namaProdi: data.identitas.namaProdi || '',
-            alamat: data.identitas.alamat || '',
-            noSkPendirianPT: data.identitas.noSkPendirianPT || '',
+            namaPT: data.identitas.namaPT ?? 'Universitas Lampung',
+            namaUPPS: data.identitas.namaUPPS ?? 'Fakultas Teknik',
+            jenisProgram: data.identitas.jenisProgram ?? 'Sarjana',
+            namaProdi: data.identitas.namaProdi ?? 'Teknik Informatika',
+            alamat: data.identitas.alamat ?? 'Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Gedong Meneng',
+            kota: data.identitas.kota ?? 'Kota Bandar Lampung',
+            kodePos: data.identitas.kodePos ?? '35145',
+            telepon: data.identitas.telepon ?? '(0721) 704947',
+            email: data.identitas.email ?? 'dekan@eng.unila.ac.id',
+            website: data.identitas.website ?? 'https://eng.unila.ac.id',
+            noSkPendirianPT: data.identitas.noSkPendirianPT ?? '',
             tanggalSkPT: data.identitas.tanggalSkPT ? data.identitas.tanggalSkPT.split('T')[0] : '',
-            noSkPembukaanPS: data.identitas.noSkPembukaanPS || '',
+            pejabatSkPendirianPT: data.identitas.pejabatSkPendirianPT ?? '',
+            fileSkPendirianPT: data.identitas.fileSkPendirianPT ?? '',
+            noSkPembukaanPS: data.identitas.noSkPembukaanPS ?? '',
             tanggalSkPS: data.identitas.tanggalSkPS ? data.identitas.tanggalSkPS.split('T')[0] : '',
+            pejabatSkPembukaanPS: data.identitas.pejabatSkPembukaanPS ?? '',
+            fileSkPembukaanPS: data.identitas.fileSkPembukaanPS ?? '',
+            tahunPertama: data.identitas.tahunPertama ?? '',
+            peringkatAkreditasi: data.identitas.peringkatAkreditasi ?? 'Baik Sekali',
+            nomorSkAkreditasi: data.identitas.nomorSkAkreditasi ?? '',
+            fileSkAkreditasi: data.identitas.fileSkAkreditasi ?? '',
+            namaPengusul: data.identitas.namaPengusul ?? '',
+            tanggalPengusul: data.identitas.tanggalPengusul ? data.identitas.tanggalPengusul.split('T')[0] : '',
+            tahunTS: data.identitas.tahunTS ?? '2024/2025',
           })
         }
         if (data.prodiList && data.prodiList.length > 0) {
           setProdiList(data.prodiList.map((p: any) => ({
             id: p.id,
             namaProdi: p.namaProdi || '',
-            jenjang: p.jenjang || 'D3',
+            jenjang: p.jenjang || 'S1',
             peringkatAkreditasi: p.peringkatAkreditasi || '',
             jumlahMahasiswaAktif: (p.jumlahMahasiswaAktif ?? 0).toString(),
           })))
@@ -168,9 +225,9 @@ export default function IdentitasPage() {
       <Header title="Identitas & Tim Penyusun" subtitle="Module 1" />
       <div className="page-content animate-fade-in">
         <div style={{ marginBottom: '24px' }}>
-          <h2 className="section-title">Identitas Pengusul & Tim Penyusun</h2>
+          <h2 className="section-title">Identitas Program Studi & Pengusul</h2>
           <p className="section-subtitle">
-            Isi data identitas Program Studi, daftar prodi di bawah UPPS, dan tim penyusun dokumen LKPS.
+            Formulir baku instrumen LAM Teknik (Sheet Menu Cover): Identitas Perguruan Tinggi, UPPS, legalitas SK, akreditasi, dan pengesahan borang.
           </p>
         </div>
 
@@ -179,9 +236,9 @@ export default function IdentitasPage() {
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', marginBottom: '28px' }}>
           {[
-            { key: 'identitas', label: 'Identitas PT & UPPS', icon: Building2 },
-            { key: 'prodi', label: 'Prodi di UPPS', icon: GraduationCap },
-            { key: 'tim', label: 'Tim Penyusun', icon: Users },
+            { key: 'identitas', label: 'Identitas PT & Pengusul (Sheet Menu)', icon: Building2 },
+            { key: 'prodi', label: 'Daftar Prodi di UPPS (Sheet PS)', icon: GraduationCap },
+            { key: 'tim', label: 'Tim Penyusun LKPS', icon: Users },
           ].map(tab => {
             const TabIcon = tab.icon
             const isActive = activeTab === tab.key
@@ -212,102 +269,438 @@ export default function IdentitasPage() {
           })}
         </div>
 
-        {/* Tab: Identitas PT */}
+        {/* Tab 1: Identitas PT & Pengusul */}
         {activeTab === 'identitas' && (
-          <div className="card animate-fade-in">
-            <div className="card-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <IconBadge color="blue" size="md">
-                  <Building size={20} strokeWidth={1.75} />
-                </IconBadge>
-                <div>
-                  <div className="card-title">Data Identitas PT & UPPS</div>
-                  <div className="card-subtitle">Sesuai SK Pendirian dari Kemendikbudristek</div>
+          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Header Box Format Baku */}
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%)',
+                border: '1px solid rgba(14, 165, 233, 0.25)',
+                borderRadius: '12px',
+                padding: '20px 24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div>
+                <span className="badge badge-blue" style={{ marginBottom: '8px', display: 'inline-block' }}>
+                  LAM TEKNIK VERSI 1.0
+                </span>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '4px 0' }}>
+                  AKREDITASI PROGRAM STUDI KETEKNIKAN
+                </h3>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>
+                  Formulir Instrumen Penilaian LKPS: Program Akademik & Vokasi
+                </p>
+              </div>
+              <div style={{ textAlign: 'right', display: 'none', md: { display: 'block' } } as any}>
+                <span className="text-xs text-muted">Kode Lembar:</span>
+                <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--accent-blue)' }}>Sheet &apos;Menu&apos; Cover</div>
+              </div>
+            </div>
+
+            {/* Bagian 1: Identitas Institusi & Program Studi */}
+            <div className="card">
+              <div className="card-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <IconBadge color="blue" size="md">
+                    <Building size={20} strokeWidth={1.75} />
+                  </IconBadge>
+                  <div>
+                    <div className="card-title">1. Identitas Perguruan Tinggi & Program Studi</div>
+                    <div className="card-subtitle">Profil dasar institusi pengelola dan program studi pengusul</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-row" style={{ marginBottom: '18px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Perguruan Tinggi <span className="required">*</span></label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: Universitas Lampung"
+                    disabled={!canEdit}
+                    value={identitas.namaPT}
+                    onChange={e => setIdentitas(p => ({ ...p, namaPT: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Unit Pengelola Program Studi (UPPS) <span className="required">*</span></label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: Fakultas Teknik"
+                    disabled={!canEdit}
+                    value={identitas.namaUPPS}
+                    onChange={e => setIdentitas(p => ({ ...p, namaUPPS: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="form-row" style={{ marginBottom: '18px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Jenis Program <span className="required">*</span></label>
+                  <select
+                    className="form-select"
+                    disabled={!canEdit}
+                    value={identitas.jenisProgram}
+                    onChange={e => setIdentitas(p => ({ ...p, jenisProgram: e.target.value }))}
+                  >
+                    <option value="Sarjana">Sarjana (S1)</option>
+                    <option value="Sarjana Terapan">Sarjana Terapan (D4)</option>
+                    <option value="Diploma Tiga">Diploma Tiga (D3)</option>
+                    <option value="Diploma Dua">Diploma Dua (D2)</option>
+                    <option value="Diploma Satu">Diploma Satu (D1)</option>
+                    <option value="Magister">Magister (S2)</option>
+                    <option value="Magister Terapan">Magister Terapan (S2 Terapan)</option>
+                    <option value="Doktor">Doktor (S3)</option>
+                    <option value="Doktor Terapan">Doktor Terapan (S3 Terapan)</option>
+                  </select>
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Nama Program Studi <span className="required">*</span></label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: Teknik Informatika"
+                    disabled={!canEdit}
+                    value={identitas.namaProdi}
+                    onChange={e => setIdentitas(p => ({ ...p, namaProdi: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group" style={{ marginBottom: '18px' }}>
+                <label className="form-label">Alamat Kampus</label>
+                <textarea
+                  className="form-textarea"
+                  placeholder="Jl. Prof. Dr. Sumantri Brojonegoro No. 1, Gedong Meneng"
+                  disabled={!canEdit}
+                  value={identitas.alamat}
+                  onChange={e => setIdentitas(p => ({ ...p, alamat: e.target.value }))}
+                  rows={2}
+                />
+              </div>
+
+              <div className="form-row" style={{ marginBottom: '18px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Kota / Kabupaten</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      className="form-input"
+                      placeholder="Contoh: Kota Bandar Lampung"
+                      disabled={!canEdit}
+                      value={identitas.kota}
+                      onChange={e => setIdentitas(p => ({ ...p, kota: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Kode Pos</label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: 35145"
+                    disabled={!canEdit}
+                    value={identitas.kodePos}
+                    onChange={e => setIdentitas(p => ({ ...p, kodePos: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Nomor Telepon</label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: (0721) 704947"
+                    disabled={!canEdit}
+                    value={identitas.telepon}
+                    onChange={e => setIdentitas(p => ({ ...p, telepon: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">E-mail Resmi</label>
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="Contoh: dekan@eng.unila.ac.id"
+                    disabled={!canEdit}
+                    value={identitas.email}
+                    onChange={e => setIdentitas(p => ({ ...p, email: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Website</label>
+                  <input
+                    type="url"
+                    className="form-input"
+                    placeholder="https://eng.unila.ac.id"
+                    disabled={!canEdit}
+                    value={identitas.website}
+                    onChange={e => setIdentitas(p => ({ ...p, website: e.target.value }))}
+                  />
                 </div>
               </div>
             </div>
 
-            <div className="form-row" style={{ marginBottom: '18px' }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Nama Perguruan Tinggi <span className="required">*</span></label>
-                <input className="form-input" placeholder="Contoh: Universitas Teknik Nusantara"
-                  disabled={!canEdit}
-                  value={identitas.namaPT} onChange={e => setIdentitas(p => ({ ...p, namaPT: e.target.value }))} />
+            {/* Bagian 2: SK Pendirian & Pembukaan */}
+            <div className="card">
+              <div className="card-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <IconBadge color="cyan" size="md">
+                    <FileCheck size={20} strokeWidth={1.75} />
+                  </IconBadge>
+                  <div>
+                    <div className="card-title">2. Legalitas SK Pendirian PT & Pembukaan PS</div>
+                    <div className="card-subtitle">Nomor, tanggal penetapan, dan pejabat penandatangan SK resmi</div>
+                  </div>
+                </div>
               </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Nama UPPS (Fakultas/Departemen) <span className="required">*</span></label>
-                <input className="form-input" placeholder="Contoh: Fakultas Teknik"
-                  disabled={!canEdit}
-                  value={identitas.namaUPPS} onChange={e => setIdentitas(p => ({ ...p, namaUPPS: e.target.value }))} />
+
+              {/* Sub: SK Pendirian PT */}
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <span className="badge badge-blue">SK Pendirian PT (1)</span>
+                  <span className="text-xs text-muted">* Wajib dilampirkan salinan SK</span>
+                </div>
+                <div className="form-row" style={{ marginBottom: '14px' }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Nomor SK Pendirian PT</label>
+                    <input
+                      className="form-input"
+                      placeholder="Nomor SK Pendirian Perguruan Tinggi..."
+                      disabled={!canEdit}
+                      value={identitas.noSkPendirianPT}
+                      onChange={e => setIdentitas(p => ({ ...p, noSkPendirianPT: e.target.value }))}
+                    />
+                  </div>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Tanggal SK Pendirian PT</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      disabled={!canEdit}
+                      value={identitas.tanggalSkPT}
+                      onChange={e => setIdentitas(p => ({ ...p, tanggalSkPT: e.target.value }))}
+                    />
+                  </div>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Pejabat Penandatangan SK PT</label>
+                    <input
+                      className="form-input"
+                      placeholder="Contoh: Menteri Pendidikan Nasional"
+                      disabled={!canEdit}
+                      value={identitas.pejabatSkPendirianPT}
+                      onChange={e => setIdentitas(p => ({ ...p, pejabatSkPendirianPT: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Link / Lokasi Salinan SK Pendirian PT (Lampiran 1)</label>
+                  <input
+                    className="form-input"
+                    placeholder="https://drive.google.com/... atau nama file arsip PDF"
+                    disabled={!canEdit}
+                    value={identitas.fileSkPendirianPT}
+                    onChange={e => setIdentitas(p => ({ ...p, fileSkPendirianPT: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <hr className="divider" style={{ margin: '20px 0' }} />
+
+              {/* Sub: SK Pembukaan PS */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <span className="badge badge-purple">SK Pembukaan PS (2)</span>
+                  <span className="text-xs text-muted">* Wajib dilampirkan salinan SK</span>
+                </div>
+                <div className="form-row" style={{ marginBottom: '14px' }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Nomor SK Pembukaan PS</label>
+                    <input
+                      className="form-input"
+                      placeholder="Nomor SK Izin Operasional / Pembukaan PS..."
+                      disabled={!canEdit}
+                      value={identitas.noSkPembukaanPS}
+                      onChange={e => setIdentitas(p => ({ ...p, noSkPembukaanPS: e.target.value }))}
+                    />
+                  </div>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Tanggal SK Pembukaan PS</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      disabled={!canEdit}
+                      value={identitas.tanggalSkPS}
+                      onChange={e => setIdentitas(p => ({ ...p, tanggalSkPS: e.target.value }))}
+                    />
+                  </div>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Pejabat Penandatangan SK PS</label>
+                    <input
+                      className="form-input"
+                      placeholder="Contoh: Dirjen Pendidikan Tinggi / Rektor"
+                      disabled={!canEdit}
+                      value={identitas.pejabatSkPembukaanPS}
+                      onChange={e => setIdentitas(p => ({ ...p, pejabatSkPembukaanPS: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Link / Lokasi Salinan SK Pembukaan PS (Lampiran 2)</label>
+                  <input
+                    className="form-input"
+                    placeholder="https://drive.google.com/... atau nama file arsip PDF"
+                    disabled={!canEdit}
+                    value={identitas.fileSkPembukaanPS}
+                    onChange={e => setIdentitas(p => ({ ...p, fileSkPembukaanPS: e.target.value }))}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-row" style={{ marginBottom: '18px' }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Nama Program Studi <span className="required">*</span></label>
-                <input className="form-input" placeholder="Contoh: Teknik Elektro"
-                  disabled={!canEdit}
-                  value={identitas.namaProdi} onChange={e => setIdentitas(p => ({ ...p, namaProdi: e.target.value }))} />
+            {/* Bagian 3: Status Akreditasi & Mahasiswa Pertama */}
+            <div className="card">
+              <div className="card-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <IconBadge color="emerald" size="md">
+                    <Award size={20} strokeWidth={1.75} />
+                  </IconBadge>
+                  <div>
+                    <div className="card-title">3. Status Akreditasi PS & Penerimaan Mahasiswa</div>
+                    <div className="card-subtitle">Peringkat akreditasi terbaru dari BAN-PT / LAM Teknik</div>
+                  </div>
+                </div>
               </div>
+
+              <div className="form-row" style={{ marginBottom: '18px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Tahun Pertama Kali Menerima Mahasiswa</label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: 2005"
+                    disabled={!canEdit}
+                    value={identitas.tahunPertama}
+                    onChange={e => setIdentitas(p => ({ ...p, tahunPertama: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Peringkat Terbaru Akreditasi PS (3)</label>
+                  <select
+                    className="form-select"
+                    disabled={!canEdit}
+                    value={identitas.peringkatAkreditasi}
+                    onChange={e => setIdentitas(p => ({ ...p, peringkatAkreditasi: e.target.value }))}
+                  >
+                    <option value="Unggul">Unggul</option>
+                    <option value="Baik Sekali">Baik Sekali</option>
+                    <option value="Baik">Baik</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="Minimum">Minimum</option>
+                    <option value="Belum Terakreditasi">Belum Terakreditasi</option>
+                  </select>
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Nomor SK BAN-PT / LAM</label>
+                  <input
+                    className="form-input"
+                    placeholder="No. SK Akreditasi Terkini..."
+                    disabled={!canEdit}
+                    value={identitas.nomorSkAkreditasi}
+                    onChange={e => setIdentitas(p => ({ ...p, nomorSkAkreditasi: e.target.value }))}
+                  />
+                </div>
+              </div>
+
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Jenis Program <span className="required">*</span></label>
-                <select className="form-select"
+                <label className="form-label">Link / Lokasi Salinan SK Akreditasi Terakhir (Lampiran 3)</label>
+                <input
+                  className="form-input"
+                  placeholder="https://drive.google.com/... atau nama file arsip PDF"
                   disabled={!canEdit}
-                  value={identitas.jenisProgram} onChange={e => setIdentitas(p => ({ ...p, jenisProgram: e.target.value }))}>
-                  <option value="Vokasi">Vokasi</option>
-                  <option value="Akademik">Akademik</option>
-                </select>
+                  value={identitas.fileSkAkreditasi}
+                  onChange={e => setIdentitas(p => ({ ...p, fileSkAkreditasi: e.target.value }))}
+                />
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Alamat Perguruan Tinggi</label>
-              <textarea className="form-textarea" placeholder="Jl. contoh No. 1, Kota, Provinsi"
-                disabled={!canEdit}
-                value={identitas.alamat} onChange={e => setIdentitas(p => ({ ...p, alamat: e.target.value }))} rows={2} />
-            </div>
-
-            <hr className="divider" />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <IconBadge color="cyan" size="sm">
-                <FileCheck size={16} strokeWidth={1.75} />
-              </IconBadge>
-              <div className="card-title">SK Pendirian Perguruan Tinggi</div>
-            </div>
-
-            <div className="form-row" style={{ marginBottom: '18px' }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Nomor SK Pendirian PT</label>
-                <input className="form-input" placeholder="No. SK..."
-                  disabled={!canEdit}
-                  value={identitas.noSkPendirianPT} onChange={e => setIdentitas(p => ({ ...p, noSkPendirianPT: e.target.value }))} />
+            {/* Bagian 4: Pengesahan Pengusul & Tahun TS */}
+            <div className="card">
+              <div className="card-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <IconBadge color="amber" size="md">
+                    <UserCheck size={20} strokeWidth={1.75} />
+                  </IconBadge>
+                  <div>
+                    <div className="card-title">4. Pengesahan Pengusul & Tahun TS (Tahun Akademik)</div>
+                    <div className="card-subtitle">Data penandatangan usulan borang akreditasi prodi (Posisi Kanan Bawah Excel)</div>
+                  </div>
+                </div>
               </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Tanggal SK Pendirian PT</label>
-                <input type="date" className="form-input"
-                  disabled={!canEdit}
-                  value={identitas.tanggalSkPT} onChange={e => setIdentitas(p => ({ ...p, tanggalSkPT: e.target.value }))} />
-              </div>
-            </div>
 
-            <div className="form-row">
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Nomor SK Pembukaan Prodi</label>
-                <input className="form-input" placeholder="No. SK..."
-                  disabled={!canEdit}
-                  value={identitas.noSkPembukaanPS} onChange={e => setIdentitas(p => ({ ...p, noSkPembukaanPS: e.target.value }))} />
+              <div className="form-row">
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Nama Pengusul (Pimpinan UPPS / Dekan) <span className="required">*</span></label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: Prof. Dr. Ir. Nama Dekan, M.T., IPU."
+                    disabled={!canEdit}
+                    value={identitas.namaPengusul}
+                    onChange={e => setIdentitas(p => ({ ...p, namaPengusul: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Tanggal Pengajuan (HH/BB/TTTT)</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    disabled={!canEdit}
+                    value={identitas.tanggalPengusul}
+                    onChange={e => setIdentitas(p => ({ ...p, tanggalPengusul: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Tahun Akademik TS (HH/BB/TTTT / Tahun) <span className="required">*</span></label>
+                  <input
+                    className="form-input"
+                    placeholder="Contoh: 2024/2025 atau 2024"
+                    disabled={!canEdit}
+                    value={identitas.tahunTS}
+                    onChange={e => setIdentitas(p => ({ ...p, tahunTS: e.target.value }))}
+                  />
+                </div>
               </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Tanggal SK Pembukaan Prodi</label>
-                <input type="date" className="form-input"
-                  disabled={!canEdit}
-                  value={identitas.tanggalSkPS} onChange={e => setIdentitas(p => ({ ...p, tanggalSkPS: e.target.value }))} />
+
+              {/* Catatan Kaki Instrumen LAM Teknik */}
+              <div
+                style={{
+                  marginTop: '20px',
+                  padding: '14px 18px',
+                  borderRadius: '8px',
+                  background: 'var(--bg-secondary)',
+                  border: '1px dashed var(--border-color)',
+                  fontSize: '12px',
+                  color: 'var(--text-secondary)',
+                  lineHeight: '1.6',
+                }}
+              >
+                <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Info size={14} /> Catatan Kaki Resmi Format Instrumen LAM-Teknik (Versi 1.0):
+                </div>
+                <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                  <li>(1) Lampirkan salinan Surat Keputusan Pendirian Perguruan Tinggi.</li>
+                  <li>(2) Lampirkan salinan Surat Keputusan Pembukaan Program Studi.</li>
+                  <li>(3) Lampirkan salinan Surat Keputusan Akreditasi Program Studi terbaru.</li>
+                </ul>
               </div>
             </div>
           </div>
         )}
 
-        {/* Tab: Prodi di UPPS */}
+        {/* Tab 2: Prodi di UPPS */}
         {activeTab === 'prodi' && (
           <div className="card animate-fade-in">
             <div className="card-header">
@@ -317,7 +710,7 @@ export default function IdentitasPage() {
                 </IconBadge>
                 <div>
                   <div className="card-title">Daftar Program Studi di bawah UPPS</div>
-                  <div className="card-subtitle">Tabel 1 – Data seluruh prodi dalam UPPS beserta status akreditasi</div>
+                  <div className="card-subtitle">Sheet &apos;PS&apos; – Data seluruh program studi dalam UPPS beserta status akreditasi & mahasiswa aktif</div>
                 </div>
               </div>
               {canEdit && (
@@ -352,7 +745,7 @@ export default function IdentitasPage() {
                         <select className="form-select" style={{ padding: '6px 10px', fontSize: '13px' }}
                           disabled={!canEdit}
                           value={prodi.jenjang} onChange={e => updateProdi(prodi.id, 'jenjang', e.target.value)}>
-                          <option>D3</option><option>D4</option><option>S1</option>
+                          <option>S1</option><option>D3</option><option>D4</option>
                           <option>S2</option><option>S3</option>
                         </select>
                       </td>
@@ -387,7 +780,7 @@ export default function IdentitasPage() {
           </div>
         )}
 
-        {/* Tab: Tim Penyusun */}
+        {/* Tab 3: Tim Penyusun */}
         {activeTab === 'tim' && (
           <div className="card animate-fade-in">
             <div className="card-header">
@@ -397,7 +790,7 @@ export default function IdentitasPage() {
                 </IconBadge>
                 <div>
                   <div className="card-title">Tim Penyusun Dokumen LKPS</div>
-                  <div className="card-subtitle">Data anggota tim penyusun beserta jabatan dan tanda tangan</div>
+                  <div className="card-subtitle">Data anggota tim penyusun borang beserta jabatan dan peran</div>
                 </div>
               </div>
               {canEdit && (
@@ -413,54 +806,29 @@ export default function IdentitasPage() {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Nama Lengkap</th>
-                    <th>NIDN/NIP</th>
+                    <th>Nama Lengkap & Gelar</th>
+                    <th>NIDN</th>
                     <th>Jabatan dalam Tim</th>
-                    <th>Tanda Tangan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {timList.map((t, idx) => (
                     <tr key={t.id}>
-                      <td style={{ color: 'var(--text-muted)' }}>{idx + 1}</td>
+                      <td style={{ color: 'var(--text-muted)', width: '40px' }}>{idx + 1}</td>
                       <td className="input-cell">
-                        <input placeholder="Nama Dosen/Staf..." value={t.nama} disabled={!canEdit}
+                        <input placeholder="Nama lengkap & gelar..." value={t.nama} disabled={!canEdit}
                           onChange={e => updateTim(t.id, 'nama', e.target.value)} />
                       </td>
-                      <td className="input-cell" style={{ width: '150px' }}>
-                        <input placeholder="0000000000" value={t.nidn} disabled={!canEdit}
+                      <td className="input-cell" style={{ width: '160px' }}>
+                        <input placeholder="0012345678" value={t.nidn} disabled={!canEdit}
                           onChange={e => updateTim(t.id, 'nidn', e.target.value)} />
                       </td>
-                      <td className="input-cell">
-                        <select className="form-select" style={{ padding: '6px 10px', fontSize: '13px' }}
-                          disabled={!canEdit}
-                          value={t.jabatan} onChange={e => updateTim(t.id, 'jabatan', e.target.value)}>
-                          <option value="">-- Pilih Jabatan --</option>
-                          <option>Ketua Tim Penyusun</option>
-                          <option>Sekretaris</option>
-                          <option>Anggota Tim</option>
-                          <option>Ketua Program Studi</option>
-                          <option>Dekan/Wakil Dekan</option>
-                        </select>
+                      <td className="input-cell" style={{ width: '220px' }}>
+                        <input placeholder="Ketua / Sekretaris / Anggota..." value={t.jabatan} disabled={!canEdit}
+                          onChange={e => updateTim(t.id, 'jabatan', e.target.value)} />
                       </td>
-                      <td style={{ width: '140px' }}>
-                        {canEdit ? (
-                          <label style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '6px',
-                            padding: '6px 12px', background: 'rgba(79,142,247,0.08)',
-                            border: '1px dashed rgba(79,142,247,0.3)', borderRadius: 'var(--radius-sm)',
-                            cursor: 'pointer', fontSize: '12px', color: 'var(--accent-blue)',
-                          }}>
-                            <UploadCloud size={13} strokeWidth={2} />
-                            Upload TTD
-                            <input type="file" accept="image/*" style={{ display: 'none' }} />
-                          </label>
-                        ) : (
-                          <span className="badge badge-gray" style={{ fontSize: '11px' }}>Tersimpan</span>
-                        )}
-                      </td>
-                      <td>
+                      <td style={{ width: '60px' }}>
                         {canEdit ? (
                           <button className="btn btn-danger btn-sm" onClick={() => removeTim(t.id)}
                             disabled={timList.length === 1}>
@@ -496,7 +864,7 @@ export default function IdentitasPage() {
               ) : (
                 <>
                   <Save size={16} strokeWidth={1.75} />
-                  Simpan Data
+                  Simpan Seluruh Data Identitas
                 </>
               )}
             </button>
@@ -507,4 +875,3 @@ export default function IdentitasPage() {
     </>
   )
 }
-

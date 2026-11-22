@@ -364,67 +364,166 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 6. Sinkronisasi Baseline Kriteria 2: Seleksi Mahasiswa Baru jika belum ada
-    if (targetProdiId) {
+    // 6. Sinkronisasi Kriteria 2: Mahasiswa (Tarik Riil dari API One Data, Kosongkan Field yang Tidak Ada)
+    if (targetProdiId && (domain === 'all' || domain === 'mahasiswa')) {
       try {
-        const existingMhs = await prisma.seleksiMahasiswaBaru.count({
-          where: { prodiId: targetProdiId },
-        })
-        if (existingMhs === 0) {
-          const cohortData = [
-            { tahunSemester: 'TS-4', dayaTampung: 100, jumlahPendaftar: 1100, jumlahLulusSeleksi: 105, mahasiswaBaruReguler: 98, mahasiswaBaruTransfer: 0, mahasiswaAktifReguler: 380, mahasiswaAktifTransfer: 0 },
-            { tahunSemester: 'TS-3', dayaTampung: 100, jumlahPendaftar: 1250, jumlahLulusSeleksi: 110, mahasiswaBaruReguler: 102, mahasiswaBaruTransfer: 0, mahasiswaAktifReguler: 410, mahasiswaAktifTransfer: 0 },
-            { tahunSemester: 'TS-2', dayaTampung: 110, jumlahPendaftar: 1300, jumlahLulusSeleksi: 115, mahasiswaBaruReguler: 108, mahasiswaBaruTransfer: 0, mahasiswaAktifReguler: 435, mahasiswaAktifTransfer: 0 },
-            { tahunSemester: 'TS-1', dayaTampung: 115, jumlahPendaftar: 1400, jumlahLulusSeleksi: 125, mahasiswaBaruReguler: 112, mahasiswaBaruTransfer: 0, mahasiswaAktifReguler: 450, mahasiswaAktifTransfer: 0 },
-            { tahunSemester: 'TS',   dayaTampung: 120, jumlahPendaftar: 1500, jumlahLulusSeleksi: 130, mahasiswaBaruReguler: 118, mahasiswaBaruTransfer: 0, mahasiswaAktifReguler: 470, mahasiswaAktifTransfer: 0 },
-          ]
-          for (const c of cohortData) {
+        const byAngkatan: Record<number, number> = {}
+        for (const uuid of targetUuids) {
+          for (let page = 1; page <= 6; page++) {
+            try {
+              const res = await fetchMyUnila('/v1/mahasiswa/list_mahasiswa', { id_sms: uuid, page, limit: 100 })
+              if (!res.data || res.data.length === 0) break
+              for (const s of res.data) {
+                const yr = Number(s.angkatan)
+                if (yr) byAngkatan[yr] = (byAngkatan[yr] || 0) + 1
+              }
+            } catch {
+              break
+            }
+          }
+        }
+
+        const cohortConfig = [
+          { ts: 'TS-4', yr: 2020 },
+          { ts: 'TS-3', yr: 2021 },
+          { ts: 'TS-2', yr: 2022 },
+          { ts: 'TS-1', yr: 2023 },
+          { ts: 'TS',   yr: 2024 },
+        ]
+
+        let syncedCohortCount = 0
+        for (const c of cohortConfig) {
+          const mbReg = byAngkatan[c.yr] || 0
+          const maReg = (byAngkatan[c.yr - 3] || 0) + (byAngkatan[c.yr - 2] || 0) + (byAngkatan[c.yr - 1] || 0) + mbReg
+
+          const exist = await prisma.seleksiMahasiswaBaru.findFirst({
+            where: { prodiId: targetProdiId, tahunSemester: c.ts },
+          })
+
+          if (exist) {
+            await prisma.seleksiMahasiswaBaru.update({
+              where: { id: exist.id },
+              data: {
+                // Tarik hanya data yang riil tersedia di API
+                mahasiswaBaruReguler: mbReg,
+                mahasiswaAktifReguler: maReg,
+                // Field yang tidak ada di API dibiarkan kosong (0) agar diisi manual oleh pihak prodi
+                dayaTampung: exist.dayaTampung || 0,
+                jumlahPendaftar: exist.jumlahPendaftar || 0,
+                jumlahLulusSeleksi: exist.jumlahLulusSeleksi || 0,
+                mahasiswaBaruTransfer: exist.mahasiswaBaruTransfer || 0,
+                mahasiswaAktifTransfer: exist.mahasiswaAktifTransfer || 0,
+              },
+            })
+          } else {
             await prisma.seleksiMahasiswaBaru.create({
-              data: { ...c, prodiId: targetProdiId },
+              data: {
+                tahunSemester: c.ts,
+                dayaTampung: 0,
+                jumlahPendaftar: 0,
+                jumlahLulusSeleksi: 0,
+                mahasiswaBaruReguler: mbReg,
+                mahasiswaBaruTransfer: 0,
+                mahasiswaAktifReguler: maReg,
+                mahasiswaAktifTransfer: 0,
+                prodiId: targetProdiId,
+              },
             })
           }
-          syncedResults.details.mahasiswa = `5 periode kohort seleksi mahasiswa baru prodi ${targetProdi} disiapkan.`
-          syncedResults.stats.mahasiswa = 5
+          syncedCohortCount++
         }
+
+        syncedResults.details.mahasiswa = `${syncedCohortCount} periode kohort mahasiswa dihitung riil dari API One Data Unila (data pendaftar & daya tampung dikosongkan untuk input manual prodi).`
+        syncedResults.stats.mahasiswa = syncedCohortCount
       } catch (err: any) {
-        syncedResults.details.mahasiswa = `Mahasiswa Baru Note: ${err.message}`
+        syncedResults.details.mahasiswa = `Mahasiswa API Note: ${err.message}`
       }
     }
 
-    // 7. Baseline Kriteria 6 & 7: Penelitian & PkM Dosen jika belum ada
-    if (targetProdiId) {
+    // 7. Sinkronisasi Riil Kriteria 6 & 7: Litabmas (Penelitian & PkM yang melibatkan Mahasiswa)
+    if (targetProdiId && (domain === 'all' || domain === 'penelitian' || domain === 'pkm')) {
       try {
-        const existingLit = await prisma.penelitianDosen.count({
-          where: { prodiId: targetProdiId },
-        })
-        if (existingLit === 0) {
-          const sampleDosen = await prisma.dosenTetap.findMany({
-            where: { prodiId: targetProdiId },
-            take: 4,
-          })
-          const dosenNames = sampleDosen.map((d: any) => d.nama)
-          if (dosenNames.length > 0) {
-            const sampleLit = [
-              { judul: `Penelitian Unggulan Terapan dan Inovasi Bidang ${targetProdi}`, jenis: 'Penelitian', mahasiswaTerlibat: `Tim Mahasiswa Riset ${targetProdi}`, tahun: 2024, namaDosen: dosenNames[0] },
-              { judul: `Kajian Pengembangan Ilmu dan Teknologi Terkini ${targetProdi}`, jenis: 'Penelitian', mahasiswaTerlibat: `Asisten Peneliti Mahasiswa ${targetProdi}`, tahun: 2023, namaDosen: dosenNames[1 % dosenNames.length] },
-              { judul: `Pemberdayaan Masyarakat Melalui Solusi Terpadu ${targetProdi}`, jenis: 'PkM', mahasiswaTerlibat: `Kelompok Mahasiswa KKN & PkM ${targetProdi}`, tahun: 2024, namaDosen: dosenNames[2 % dosenNames.length] },
-              { judul: `Pelatihan Digitalisasi dan Edukasi Keahlian ${targetProdi} di Provinsi Lampung`, jenis: 'PkM', mahasiswaTerlibat: `Relawan Mahasiswa ${targetProdi}`, tahun: 2023, namaDosen: dosenNames[3 % dosenNames.length] },
-            ]
-            for (const item of sampleLit) {
-              await prisma.penelitianDosen.create({
-                data: { ...item, prodiId: targetProdiId },
-              })
+        const idSdmSet = new Set<string>()
+        for (const uuid of targetUuids) {
+          try {
+            const resPenugasan = await fetchMyUnila('/v1/sdm/penugasan_sdm', { id_sms: uuid, limit: 100 })
+            if (Array.isArray(resPenugasan.data)) {
+              for (const p of resPenugasan.data) {
+                if (p.id_sdm) idSdmSet.add(p.id_sdm)
+              }
             }
-            syncedResults.details.penelitian = `4 data riset & PkM awal prodi ${targetProdi} disiapkan.`
-            syncedResults.stats.penelitian = 4
-          }
+          } catch {}
         }
+
+        let syncedLitCount = 0
+        const processedLitIds = new Set<string>()
+
+        for (const idSdm of idSdmSet) {
+          try {
+            await new Promise((r) => setTimeout(r, 40))
+            const litRes = await fetchMyUnila('/v1/penelitian/list_sdm_anggota_litabmas', {
+              id_sdm: idSdm,
+              limit: 20,
+            })
+            if (!Array.isArray(litRes.data) || litRes.data.length === 0) continue
+
+            for (const item of litRes.data) {
+              if (!item.id_litabmas || processedLitIds.has(item.id_litabmas)) continue
+              processedLitIds.add(item.id_litabmas)
+
+              await new Promise((r) => setTimeout(r, 30))
+              const detRes = await fetchMyUnila('/v1/penelitian/litabmas', {
+                id_litabmas: item.id_litabmas,
+              })
+              const det = detRes.data?.[0]
+              if (!det) continue
+
+              const isPenelitian = det.jns_litabmas === 'L'
+              const jenis = isPenelitian ? 'Penelitian' : 'PkM'
+              const judul = (det.judul_litabmas || item.nm_litabmas || '').trim()
+              if (!judul) continue
+
+              const tahun = det.id_thn_kegiatan || det.id_thn_laks || 2024
+
+              const mhsRes = await fetchMyUnila('/v1/penelitian/list_pd_anggota_litabmas', {
+                id_litabmas: item.id_litabmas,
+                limit: 10,
+              })
+              const mhsList = Array.isArray(mhsRes.data) ? mhsRes.data : []
+              const mhsNames = Array.from(new Set(mhsList.map((m: any) => m.nm_pd).filter(Boolean))).join(', ')
+
+              const exist = await prisma.penelitianDosen.findFirst({
+                where: {
+                  prodiId: targetProdiId,
+                  judul: judul,
+                },
+              })
+
+              if (!exist) {
+                await prisma.penelitianDosen.create({
+                  data: {
+                    judul,
+                    namaDosen: item.nm_sdm || 'Dosen Peneliti',
+                    mahasiswaTerlibat: mhsNames || '-',
+                    tahun: Number(tahun) || 2024,
+                    jenis,
+                    prodiId: targetProdiId,
+                  },
+                })
+                syncedLitCount++
+              }
+            }
+          } catch {}
+        }
+
+        syncedResults.details.litabmas = `${syncedLitCount} kegiatan Penelitian & PkM riil yang melibatkan mahasiswa berhasil disinkronkan dari Litabmas One Data Unila.`
+        syncedResults.stats.litabmas = syncedLitCount
       } catch (err: any) {
-        syncedResults.details.penelitian = `Penelitian/PkM Note: ${err.message}`
+        syncedResults.details.litabmas = `Litabmas API Note: ${err.message}`
       }
     }
 
-    // 6. Bersihkan nama dosen dummy lama di Kriteria 6 & 7 (Penelitian & PkM)
+    // 8. Bersihkan nama dosen dummy lama di Kriteria 6 & 7 (Penelitian & PkM)
     await prisma.penelitianDosen.deleteMany({
       where: {
         OR: [

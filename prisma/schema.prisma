@@ -93,18 +93,34 @@ model Verification {
 // ─── IDENTITAS ───────────────────────────────────────────────
 
 model IdentitasPT {
-  id                String   @id @default(cuid())
-  namaPT            String
-  namaUPPS          String
-  jenisProgram      String   // Akademik / Vokasi
-  namaProdi         String
-  alamat            String
-  noSkPendirianPT   String?
-  tanggalSkPT       DateTime?
-  noSkPembukaanPS   String?
-  tanggalSkPS       DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                    String    @id @default(cuid())
+  namaPT                String
+  namaUPPS              String
+  jenisProgram          String    // Sarjana / Vokasi / dll
+  namaProdi             String
+  alamat                String
+  kota                  String?
+  kodePos               String?
+  telepon               String?
+  email                 String?
+  website               String?
+  noSkPendirianPT       String?
+  tanggalSkPT           DateTime?
+  pejabatSkPendirianPT  String?
+  fileSkPendirianPT     String?
+  noSkPembukaanPS       String?
+  tanggalSkPS           DateTime?
+  pejabatSkPembukaanPS  String?
+  fileSkPembukaanPS     String?
+  tahunPertama          String?
+  peringkatAkreditasi   String?
+  nomorSkAkreditasi     String?
+  fileSkAkreditasi      String?
+  namaPengusul          String?
+  tanggalPengusul       DateTime?
+  tahunTS               String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   @@map("identitas_pt")
 }
